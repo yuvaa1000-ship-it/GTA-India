@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>GTA INDIA · Genesis</title>
+  </head>
+  <body>
+    <canvas id="game" aria-label="Playable 3D district"></canvas>
+    <header>
+      <span class="eyebrow">ENGINE MILESTONE / 001</span>
+      <h1>GTA <em>INDIA</em></h1>
+      <p>NAVAPUR · OLD PORT DISTRICT</p>
+    </header>
+    <aside id="hud" aria-label="Developer performance HUD"></aside>
+    <section id="panel">
+      <span class="eyebrow">GENESIS / LIVE PROTOTYPE</span>
+      <h2>A city begins<br />with one street.</h2>
+      <p>
+        Explore a streamed district. Walk into the crates to push them. Find the
+        teal doorway to enter the depot.
+      </p>
+      <button id="play">Enter the district <span>↗</span></button>
+      <p class="small">Original procedural blockout · No final art</p>
+    </section>
+    <footer>
+      <div>
+        <b>W A S D</b> Move <b>SHIFT</b> Run <b>SPACE</b> Jump <b>← →</b> Camera
+        <b>E</b> Depot
+      </div>
+      <div>
+        <button id="save">Save</button><button id="load">Load</button
+        ><button id="reset">Return to plaza</button
+        ><button id="test">Run diagnostics</button
+        ><button id="report">Export metrics</button>
+        <button id="close-report" hidden>Close report</button>
+      </div>
+      <output id="notice">Starting renderer and physics…</output>
+    </footer>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+export const CONFIG = Object.freeze({
+  cellSize: 64,
+  radius: 2,
+  maxCells: 25,
+  cellUploadsPerFrame: 1,
+  fixedDt: 1 / 60,
+  maxSubsteps: 5,
+  walkSpeed: 4.5,
+  runSpeed: 8,
+  gravity: -18,
+  playerRadius: 0.32,
+  playerHalfHeight: 0.55,
+  maxPropsPerCell: 4,
+  maxWorldCoordinate: 2048,
+});
