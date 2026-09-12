@@ -1,0 +1,238 @@
+{
+  "operation": "PHOTON",
+  "date": "2026-09-12",
+  "buildAsset": "index-Bel1X-er.js",
+  "source": "Values transcribed from the completed in-app production DOM report after final code fixes; sample ages and submission times rounded to 0.001 ms.",
+  "url": "http://127.0.0.1:4173/",
+  "renderer": "ANGLE (Intel, Mesa Intel(R) HD Graphics 2000 (SNB GT1), OpenGL 3.3)",
+  "hdrFramebuffer": true,
+  "webgpuAdapter": {
+    "available": false,
+    "reason": "requestAdapter returned null"
+  },
+  "method": "Six-second fixed-inspection-camera windows after probe recapture and 1.2-second warm-up. Hardware compatibility measurements, not production GPU acceptance. Browser viewport changed since the pre-fix run; these are not matched before/after performance measurements.",
+  "checks": [
+    {
+      "name": "HDR framebuffer",
+      "passed": true,
+      "detail": "Framebuffer completeness queried"
+    },
+    {
+      "name": "Material hierarchy",
+      "passed": true,
+      "detail": "Dielectric road/glass, conductor chrome, clearcoat paint"
+    },
+    {
+      "name": "Planar capture advances",
+      "passed": true,
+      "detail": "102 completed captures"
+    },
+    {
+      "name": "Environment probe refresh",
+      "passed": true,
+      "detail": "5 captures filtered"
+    },
+    {
+      "name": "Image metering",
+      "passed": true,
+      "detail": "15 rendered-image samples; async error none"
+    },
+    {
+      "name": "Physics preserved",
+      "passed": true,
+      "detail": "226 before and after"
+    },
+    {
+      "name": "Window LOD active",
+      "passed": true,
+      "detail": "15 detailed /25 resident cells"
+    },
+    {
+      "name": "Target lifecycle",
+      "passed": true,
+      "detail": "20 textures and36 geometries before and after repeated quality cycles"
+    }
+  ],
+  "runs": [
+    {
+      "name": "balanced-no-planar",
+      "resolution": [972, 814],
+      "samples": 38,
+      "fps": 6.386592190038092,
+      "frameMs": 156.5780263157895,
+      "p95FrameMs": 299.98999999999796,
+      "cpuMs": 61.53473684201507,
+      "physicsMs": 3.514736841579801,
+      "aiMs": 1.2822368422425108,
+      "streamingMs": 0.20842105287470317,
+      "drawCalls": 244,
+      "triangles": 55790,
+      "heapMB": 20.10202693939209,
+      "latestGpuPassMs": {
+        "scene": 110.88544,
+        "post": 16.85112,
+        "meter": 1.03624,
+        "planar": null
+      },
+      "gpuSampleAgeMs": {
+        "scene": 737.665,
+        "post": 725.39,
+        "meter": 2575.54
+      },
+      "latestMeterSubmissionCpuMs": 510.69,
+      "meterCount": 7,
+      "planarUpdates": 35,
+      "probeVersion": 2,
+      "detailCells": 10,
+      "exposure": 1.8200960304299552,
+      "logLuminance": -3.05183823529412,
+      "cells": 25,
+      "npcs": 100,
+      "vehicles": 50,
+      "rigidBodies": 226,
+      "animationAgents": 0,
+      "pendingCells": 0,
+      "meterReadback": "WebGL2 PBO/fence",
+      "meterError": null,
+      "adaptive": false
+    },
+    {
+      "name": "balanced-planar",
+      "resolution": [972, 814],
+      "samples": 39,
+      "fps": 6.290363163633315,
+      "frameMs": 158.9733333333333,
+      "p95FrameMs": 333.32500000000437,
+      "cpuMs": 64.43538461530056,
+      "physicsMs": 3.919743589388254,
+      "aiMs": 0.7305128204707916,
+      "streamingMs": 0.1491025638503906,
+      "drawCalls": 242,
+      "triangles": 55764,
+      "heapMB": 22.02854061126709,
+      "latestGpuPassMs": {
+        "scene": 109.97376,
+        "post": 16.5828,
+        "planar": 13.51992,
+        "meter": 22.7428
+      },
+      "gpuSampleAgeMs": {
+        "scene": 663.02,
+        "post": 654.62,
+        "planar": 822.375,
+        "meter": 2163.84
+      },
+      "latestMeterSubmissionCpuMs": 562.65,
+      "meterCount": 10,
+      "planarUpdates": 60,
+      "probeVersion": 3,
+      "detailCells": 10,
+      "exposure": 1.8587643586252862,
+      "logLuminance": -3.101102941176465,
+      "cells": 25,
+      "npcs": 100,
+      "vehicles": 50,
+      "rigidBodies": 226,
+      "animationAgents": 0,
+      "pendingCells": 0,
+      "meterReadback": "WebGL2 PBO/fence",
+      "meterError": null,
+      "adaptive": false
+    },
+    {
+      "name": "rain-performance",
+      "resolution": [800, 670],
+      "samples": 54,
+      "fps": 9.025135000977722,
+      "frameMs": 110.80166666666668,
+      "p95FrameMs": 149.99500000000262,
+      "cpuMs": 46.95222222211736,
+      "physicsMs": 2.639722222255336,
+      "aiMs": 0.5778703704062436,
+      "streamingMs": 0.20675925882878127,
+      "drawCalls": 389,
+      "triangles": 88580,
+      "heapMB": 19.248982429504395,
+      "latestGpuPassMs": {
+        "scene": 74.64528,
+        "post": 7.48832,
+        "planar": 8.15856,
+        "meter": 0.0364
+      },
+      "gpuSampleAgeMs": {
+        "scene": 472.39,
+        "post": 463.22,
+        "planar": 603.655,
+        "meter": 1257.59
+      },
+      "latestMeterSubmissionCpuMs": 347.775,
+      "meterCount": 14,
+      "planarUpdates": 83,
+      "probeVersion": 4,
+      "detailCells": 9,
+      "exposure": 2.257425538433812,
+      "logLuminance": -3.3558823529411685,
+      "cells": 25,
+      "npcs": 100,
+      "vehicles": 50,
+      "rigidBodies": 226,
+      "animationAgents": 0,
+      "pendingCells": 0,
+      "meterReadback": "WebGL2 PBO/fence",
+      "meterError": null,
+      "adaptive": false
+    },
+    {
+      "name": "night-reference",
+      "resolution": [1144, 958],
+      "samples": 14,
+      "fps": 2.3529550173824565,
+      "frameMs": 424.9974999999998,
+      "p95FrameMs": 499.9850000000006,
+      "cpuMs": 140.55285714300615,
+      "physicsMs": 3.1289285700768232,
+      "aiMs": 1.2367857141154153,
+      "streamingMs": 0.1417857145092317,
+      "drawCalls": 664,
+      "triangles": 158124,
+      "heapMB": 16.321746826171875,
+      "latestGpuPassMs": {
+        "scene": 322.12304,
+        "post": 41.446,
+        "planar": 50.23624,
+        "meter": 21.2644
+      },
+      "gpuSampleAgeMs": {
+        "scene": 2085.045,
+        "post": 2067.455,
+        "planar": 2100.04,
+        "meter": 5358.995
+      },
+      "latestMeterSubmissionCpuMs": 1250.265,
+      "meterCount": 15,
+      "planarUpdates": 102,
+      "probeVersion": 5,
+      "detailCells": 15,
+      "exposure": 2.432687012018714,
+      "logLuminance": -6.479411764705869,
+      "cells": 25,
+      "npcs": 100,
+      "vehicles": 50,
+      "rigidBodies": 226,
+      "animationAgents": 0,
+      "pendingCells": 0,
+      "meterReadback": "WebGL2 PBO/fence",
+      "meterError": null,
+      "adaptive": false
+    }
+  ],
+  "limitations": [
+    "Final viewport is larger than the pre-fix viewport. Do not attribute cross-run FPS changes to the PBO repair.",
+    "The meter has no explicit blocking fence wait; driver/command submission still stalls heavily on this host. No net speedup is claimed. Latest submission sample includes rendering the meter and GL calls.",
+    "GPU values are latest asynchronous pass samples with ages, not synchronous per-frame sums; reference samples can be seconds old.",
+    "Draw/triangle counts are one final frame across all submitted passes; planar cadence can make an enabled run end with a lower count.",
+    "The local GPU is not the user-defined production target. Modern 60+ CU-class GPU and hardware RT performance have not been measured.",
+    "This WebGL2 backend does not use hardware ray tracing.",
+    "Two short fixed-camera comparisons do not replace long-duration soak or visual review during fast camera movement."
+  ]
+}

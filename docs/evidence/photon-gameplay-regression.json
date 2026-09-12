@@ -1,0 +1,101 @@
+{
+  "operation": "PHOTON",
+  "date": "2026-09-12",
+  "buildAsset": "index-Bel1X-er.js",
+  "source": "Completed in-app production diagnostics DOM report",
+  "tests": [
+    {
+      "name": "Ground contact",
+      "passed": true,
+      "detail": {
+        "x": 4.267006261216011e-6,
+        "y": 0.8850967288017273,
+        "z": 7.999997615814209
+      }
+    },
+    {
+      "name": "Locomotion",
+      "passed": true,
+      "detail": "moved4.12m"
+    },
+    {
+      "name": "Jump",
+      "passed": true,
+      "detail": "height delta0.75m"
+    },
+    {
+      "name": "Building collision",
+      "passed": true,
+      "detail": "stopped x11.65 at wall11.99"
+    },
+    {
+      "name": "Streaming eviction",
+      "passed": true,
+      "detail": "101created /76evicted /25resident"
+    },
+    {
+      "name": "Rigid-body lifetime",
+      "passed": true,
+      "detail": "226before /226after"
+    },
+    {
+      "name": "Geometry lifetime",
+      "passed": true,
+      "detail": "36before /36after"
+    },
+    {
+      "name": "Persistent prop",
+      "passed": true,
+      "detail": "State retained across unload/reload"
+    },
+    {
+      "name": "Interior entry",
+      "passed": true,
+      "detail": "Separate collidable depot"
+    },
+    {
+      "name": "Interior exit",
+      "passed": true,
+      "detail": "Exterior restored, room bodies released"
+    },
+    {
+      "name": "Worker errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "metrics": {
+    "samples": 600,
+    "fps": 8.470646034996475,
+    "frameMs": 118.05474999999998,
+    "p95FrameMs": 299.99499999999534,
+    "cpuMs": 52.402400000045695,
+    "physicsMs": 3.5857583331751326,
+    "aiMs": 0.5420166666743657,
+    "streamingMs": 0.9959166667051613,
+    "latestSceneGpuMs": 55.87064,
+    "drawCalls": 393,
+    "triangles": 84388,
+    "geometries": 36,
+    "textures": 20,
+    "heapMB": 28.342605590820312,
+    "cells": 25,
+    "created": 101,
+    "evicted": 76,
+    "npcs": 100,
+    "vehicles": 50,
+    "rigidBodies": 226,
+    "animationAgents": 0,
+    "quality": "performance",
+    "condition": "sunset",
+    "scale": 0.7,
+    "resolution": [800, 670],
+    "meterCount": 72,
+    "meterError": null
+  },
+  "notes": [
+    "Rolling600frame window includes comparison history and diagnostic traversal; not a steady-state benchmark.",
+    "Actual renderer: ANGLE/Mesa Intel HD Graphics2000(SNBGT1), OpenGL3.3, WebGL2. HDR complete. WebGPU requestAdapter returned null.",
+    "No captured browser errors; one existing nonfatal Rapier initialization deprecation warning."
+  ]
+}

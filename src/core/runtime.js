@@ -9,6 +9,7 @@ import { FixedClock } from "./clock.js";
 import { Metrics } from "../debug/metrics.js";
 import { updateHUD, notice } from "../ui/hud.js";
 import { Depot } from "../world/depot.js";
+import { Photon } from "../rendering/photon.js";
 export class Runtime {
   async init() {
     Object.assign(this, createRenderer(document.querySelector("#game")));
@@ -26,6 +27,7 @@ export class Runtime {
     this.input = new Input(this.renderer.domElement);
     this.clock = new FixedClock();
     this.metrics = new Metrics(this.renderer);
+    this.photon = new Photon(this);
     this.time = 0;
     this.previous = performance.now();
     this.running = true;
@@ -40,13 +42,17 @@ export class Runtime {
       this.input.blur();
     };
     document.addEventListener("visibilitychange", this.hide);
-    this.renderer.domElement.addEventListener("webglcontextlost", (e) => {
+    this.contextLost = (e) => {
       e.preventDefault();
       this.running = false;
       notice(
         "Graphics context lost. Reload to recover; saved progress is preserved.",
       );
-    });
+    };
+    this.renderer.domElement.addEventListener(
+      "webglcontextlost",
+      this.contextLost,
+    );
     requestAnimationFrame(this.frame);
     notice("Ready · Enter the district to begin");
     return this;
@@ -76,14 +82,17 @@ export class Runtime {
         this.depot.inside ||
         this.streaming.isReady(this.player.body.translation())
       ) {
-        this.player.step(step, this.overrideInput ?? this.input.sample(step));
+        const input = this.overrideInput ?? this.input.sample(step);
+        if (this.inspectLab && !this.overrideInput)
+          Object.assign(input, { x: 0, z: 0, jump: false, sprint: false });
+        this.player.step(step, input);
         this.world.step();
       }
       physicsMs += performance.now() - start;
     });
     this.player.sync();
     if (this.player.body.translation().y < -10) this.reset();
-    if (this.input.enabled && this.input.consume("KeyE"))
+    if (this.input.enabled && !this.inspectLab && this.input.consume("KeyE"))
       notice(this.depot.interact(this.player));
     const pos = this.player.mesh.position;
     this.cameraTarget.copy(pos).add(new T.Vector3(0, 0.7, 0));
@@ -120,11 +129,16 @@ export class Runtime {
         );
     this.camera.position.lerp(desired, 1 - Math.exp(-8 * dt));
     this.camera.lookAt(this.cameraTarget);
-    this.sun.position.copy(pos).add(new T.Vector3(-35, 60, 20));
-    this.sun.target.position.copy(pos);
-    this.metrics.beginGPU();
-    this.renderer.render(this.scene, this.camera);
-    this.metrics.endGPU();
+    if (this.inspectLab) {
+      this.camera.position.set(
+        11 * Math.sin(this.input.yaw + 0.65),
+        5.8,
+        -6 + 13 * Math.cos(this.input.yaw + 0.65),
+      );
+      this.camera.lookAt(0, 1.15, -6);
+    }
+
+    this.photon.render(this.time, dt, rawDt);
     this.metrics.record(
       rawDt,
       performance.now() - cpuStart,
@@ -168,13 +182,18 @@ export class Runtime {
   dispose() {
     this.running = false;
     document.removeEventListener("visibilitychange", this.hide);
+    this.renderer.domElement.removeEventListener(
+      "webglcontextlost",
+      this.contextLost,
+    );
     this.input.dispose();
     this.depot.dispose();
     this.player.dispose(this.scene);
     this.streaming.dispose();
+    this.photon.dispose();
     this.assets.dispose();
     this.metrics.dispose();
     this.world.free();
-    this.renderer.dispose();
+    this.disposeRenderer();
   }
 }

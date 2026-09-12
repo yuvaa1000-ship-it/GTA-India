@@ -16,3 +16,19 @@
 - FIX: frame telemetry initially inherited the 100ms simulation clamp; changed telemetry to actual wall-clock intervals so stalls are not hidden. Physics alone remains clamped.
 - FIX: short Space/E taps could be lost between rendered frames; introduced a separate one-shot action queue and event-order regression test.
 - FIX: saved prop maps could be overwritten when clearing live cells during Load; preserve a cloned loaded snapshot before disposal writes.
+
+## PHOTON — 2026-09-12
+
+- DESIGN CHOICE: preserve the canonical GENESIS executable; add a separate Photon render service and lab within the existing plaza.
+- CONFIRMED FACT: installed Three0.180 Reflector defaults to half-float plus four MSAA samples; this implementation uses explicit zero MSAA and capability-checked target formats.
+- DESIGN CHOICE: filtered cubemap + bounded planar puddle captures gives different costs/responses for rough surfaces and important flat water. Full SSR/SSGI is deferred pending measured budget and artifact work.
+- EXPERIMENTAL IMPLEMENTATION: custom box-projected probe, eight-sample depth AO, height-fog integral approximation, image-space edge softening, tiny bloom gather, procedural cloud attenuation, and optional render-scale feedback. None is labeled as a competitor's proprietary renderer.
+- FIX: renamed renderer-service dispose method to prevent shadowing runtime cleanup; full disposal now reaches cell physics, render targets, textures, lights, workers and event handlers.
+- FIX: local probe captures require residency at their own location; a distant quality change no longer overwrites the plaza probe with an unloaded view.
+- FIX: timer-query disjoint events discard every pending result; stale invalid measurements cannot later appear valid.
+- FIX: physical puddle fallback follows final capture visibility; distance/frustum culling preserves a surface.
+- DESIGN CHOICE: use existing local compute. No new DigitalOcean server, paid generation, model download or Wolfram job is necessary for these GLSL/raster integration changes.
+
+## PHOTON target hardware clarification — 2026-09-12
+
+USER DIRECTION: target modern GPUs in the 60+ CU class with RT capabilities. Preserve the high-quality rendering path even when the local Intel HD 2000 runs slowly. Local measurements qualify compatibility and expose bugs; they do not define the intended visual ceiling. Actual hardware ray tracing remains unimplemented in this WebGL2 backend. A specific modern GPU/resolution baseline is required before advertising a frame-rate target.

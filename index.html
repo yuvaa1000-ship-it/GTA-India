@@ -3,25 +3,54 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>GTA INDIA · Genesis</title>
+    <title>GTA INDIA · Photon</title>
   </head>
   <body>
     <canvas id="game" aria-label="Playable 3D district"></canvas>
     <header>
-      <span class="eyebrow">ENGINE MILESTONE / 001</span>
+      <span class="eyebrow">RENDERING LABORATORY / 002</span>
       <h1>GTA <em>INDIA</em></h1>
       <p>NAVAPUR · OLD PORT DISTRICT</p>
     </header>
     <aside id="hud" aria-label="Developer performance HUD"></aside>
     <section id="panel">
-      <span class="eyebrow">GENESIS / LIVE PROTOTYPE</span>
-      <h2>A city begins<br />with one street.</h2>
+      <span class="eyebrow">PHOTON / MATERIAL STUDY</span>
+      <h2>Light meets<br />the street.</h2>
       <p>
-        Explore a streamed district. Walk into the crates to push them. Find the
-        teal doorway to enter the depot.
+        Compare paint, metal, glass and wet asphalt in a live rendering
+        laboratory. Walk the district or switch lighting conditions.
       </p>
       <button id="play">Enter the district <span>↗</span></button>
-      <p class="small">Original procedural blockout · No final art</p>
+      <p class="small">Original procedural material coupons · Live 3D</p>
+    </section>
+    <section id="render-controls" aria-label="Rendering controls">
+      <label
+        >Quality
+        <select id="quality">
+          <option value="performance">Performance</option>
+          <option value="balanced" selected>Balanced</option>
+          <option value="reference">Reference</option>
+        </select></label
+      >
+      <label
+        >Light
+        <select id="condition">
+          <option value="sunset">Sunset</option>
+          <option value="night">Night</option>
+          <option value="rain">Rain</option>
+        </select></label
+      >
+      <label
+        ><input type="checkbox" id="planar" checked /> Puddle reflections</label
+      >
+      <label
+        ><input type="checkbox" id="exposure" checked /> Auto exposure</label
+      >
+      <label><input type="checkbox" id="adaptive" /> Adaptive resolution</label>
+      <button id="hud-toggle">Hide HUD</button
+      ><button id="lab-camera">Inspect materials</button
+      ><button id="probe">Refresh probe</button
+      ><button id="photon-test">Compare rendering</button>
     </section>
     <footer>
       <div>

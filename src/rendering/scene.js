@@ -41,8 +41,9 @@ export function createRenderer(canvas) {
     scene,
     camera,
     sun,
-    dispose() {
+    disposeRenderer() {
       removeEventListener("resize", resize);
+      sun.dispose();
       renderer.dispose();
     },
   };

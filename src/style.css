@@ -227,3 +227,59 @@ output {
     margin-left: 4px;
   }
 }
+#render-controls {
+  position: absolute;
+  left: 26px;
+  bottom: 112px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px 14px;
+  align-items: center;
+  max-width: 720px;
+  padding: 12px 14px;
+  background: #102a30ee;
+  border: 1px solid #b4c5bb40;
+  font: 10px monospace;
+}
+#render-controls label {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+#render-controls select {
+  background: #213e42;
+  color: #e7ddc6;
+  border: 1px solid #658780;
+  padding: 4px;
+}
+#render-controls input {
+  accent-color: #ddb475;
+}
+#hud {
+  font-size: 10px;
+  width: 306px;
+}
+#diagnostics {
+  z-index: 5;
+  top: 150px;
+  max-width: 620px;
+  max-height: 52vh;
+}
+#render-controls button {
+  padding: 6px;
+  font-size: 10px;
+}
+@media (max-width: 800px) {
+  #render-controls {
+    left: 10px;
+    right: 10px;
+    bottom: 120px;
+    max-width: none;
+    padding: 8px;
+    font-size: 9px;
+  }
+  #hud {
+    width: 250px;
+    font-size: 9px;
+  }
+}

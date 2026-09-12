@@ -36,3 +36,11 @@ Do not create empty implementations to imply these systems exist. Extract a modu
 Persistent crate transforms use stable cell/prop IDs, survive unload, and serialize to browser storage on Save. Cache is bounded at 2048 records and discards oldest insertion records: not unlimited world persistence. Unloaded pedestrian/vehicle proxies reconstruct analytically from world time, with one-second updates beyond 90m; they do not retain identities. Actual traffic/pedestrian AI is PLANNED.
 
 A depot interior has its own five colliders, entered near (-9,-10); exterior anchor remains streamed while inside. Leaving releases all room colliders. World travel is clamped to ±2048m; no floating origin required within this prototype. Large-world origin shifting is PLANNED. Worker failures are exposed; retry/fallback and asset-network streaming remain limitations.
+
+## PHOTON integration (operation 02)
+
+`Runtime` owns `Photon`; the latter owns the material laboratory, atmosphere, reflections, postprocess, timing queries, and rain display. Input, fixed physics, streaming, save state and depot ownership retain their GENESIS contracts. The new lab is a render-only fixture within the existing central region. Its geometry cannot be cited as delivered vehicle/character simulation.
+
+The previous renderer factory returned a `dispose` property which overwrote `Runtime.prototype.dispose()` through Object.assign. It is now named `disposeRenderer`; full runtime cleanup explicitly releases PHOTON resources and the renderer's sun shadow, removes canvas/context listeners, then releases renderer state. Shared original assets remain cell-safe. Probe/planar/scene/meter targets have explicit owners and are reused or disposed on resize. GPU queries are bounded and dropped on disjoint events.
+
+Render metrics reset once before the entire render graph. CPU pass submission and asynchronous GPU query values are separate. Rendering can perform more than one scene submission per application frame; draw and triangle counts include those passes. Facade LOD affects window batch visibility only, not physics or persistence.

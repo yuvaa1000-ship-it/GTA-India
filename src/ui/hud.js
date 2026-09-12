@@ -5,7 +5,16 @@ export function updateHUD(m) {
       {
         "Frame p95": fmt(m.p95FrameMs) + " ms",
         "CPU submission": fmt(m.cpuMs) + " ms",
-        GPU: fmt(m.gpuMs) + " ms",
+        "GPU scene (latest)": fmt(m.gpuMs) + " ms",
+        "Planar / post GPU":
+          fmt(m.photon?.gpuPassMs.planar ?? null) +
+          " / " +
+          fmt(m.photon?.gpuPassMs.post ?? null) +
+          " ms",
+        "Exposure / scale":
+          fmt(m.photon?.exposure ?? null) +
+          " / " +
+          fmt(m.photon?.renderScale ?? null),
         Physics: fmt(m.physicsMs) + " ms",
         "Population / stream": fmt(m.aiMs) + " / " + fmt(m.streamingMs) + " ms",
         "Draws / triangles": m.drawCalls + " / " + m.triangles.toLocaleString(),
@@ -19,7 +28,7 @@ export function updateHUD(m) {
       .map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`)
       .join(
         "",
-      )}</dl><div class="coordinates">${m.position.x.toFixed(1)} E · ${m.position.z.toFixed(1)} N <span>GENESIS 0.1</span></div>`;
+      )}</dl><div class="coordinates">${m.position.x.toFixed(1)} E · ${m.position.z.toFixed(1)} N <span>PHOTON 0.2</span></div>`;
 }
 export const notice = (text) => {
   document.querySelector("#notice").textContent = text;
