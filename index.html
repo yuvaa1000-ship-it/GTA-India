@@ -3,25 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>GTA INDIA · Photon</title>
+    <title>GTA INDIA · Human</title>
   </head>
   <body>
     <canvas id="game" aria-label="Playable 3D district"></canvas>
     <header>
-      <span class="eyebrow">RENDERING LABORATORY / 002</span>
+      <span class="eyebrow">CHARACTER FRAMEWORK / 003</span>
       <h1>GTA <em>INDIA</em></h1>
       <p>NAVAPUR · OLD PORT DISTRICT</p>
     </header>
     <aside id="hud" aria-label="Developer performance HUD"></aside>
     <section id="panel">
-      <span class="eyebrow">PHOTON / MATERIAL STUDY</span>
-      <h2>Light meets<br />the street.</h2>
+      <span class="eyebrow">HUMAN / LIVING IDENTITIES</span>
+      <h2>People make<br />the city.</h2>
       <p>
-        Compare paint, metal, glass and wet asphalt in a live rendering
-        laboratory. Walk the district or switch lighting conditions.
+        Explore the district with a skinned character and deterministic
+        citizens. Inspect the character framework and compare lighting
+        conditions.
       </p>
       <button id="play">Enter the district <span>↗</span></button>
-      <p class="small">Original procedural material coupons · Live 3D</p>
+      <p class="small">Original procedural characters · Live skinning</p>
     </section>
     <section id="render-controls" aria-label="Rendering controls">
       <label
@@ -47,7 +48,8 @@
         ><input type="checkbox" id="exposure" checked /> Auto exposure</label
       >
       <label><input type="checkbox" id="adaptive" /> Adaptive resolution</label>
-      <button id="hud-toggle">Hide HUD</button
+      <button id="human-camera">Inspect character</button
+      ><button id="hud-toggle">Hide HUD</button
       ><button id="lab-camera">Inspect materials</button
       ><button id="probe">Refresh probe</button
       ><button id="photon-test">Compare rendering</button>
@@ -60,6 +62,7 @@
       <div>
         <button id="save">Save</button><button id="load">Load</button
         ><button id="reset">Return to plaza</button
+        ><button id="human-test">Validate humans</button
         ><button id="test">Run diagnostics</button
         ><button id="report">Export metrics</button>
         <button id="close-report" hidden>Close report</button>

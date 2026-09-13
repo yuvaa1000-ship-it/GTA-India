@@ -9,6 +9,7 @@ import { FixedClock } from "./clock.js";
 import { Metrics } from "../debug/metrics.js";
 import { updateHUD, notice } from "../ui/hud.js";
 import { Depot } from "../world/depot.js";
+import { HumanSystem } from "../characters/system.js";
 import { Photon } from "../rendering/photon.js";
 export class Runtime {
   async init() {
@@ -28,8 +29,9 @@ export class Runtime {
     this.clock = new FixedClock();
     this.metrics = new Metrics(this.renderer);
     this.photon = new Photon(this);
+    this.humans = new HumanSystem(this);
     this.time = 0;
-    this.previous = performance.now();
+    this.previous = null;
     this.running = true;
     this.lastHUD = 0;
     this.camera.position.set(12, 9, 22);
@@ -37,7 +39,7 @@ export class Runtime {
     this.raycaster = new T.Raycaster();
     this.frame = this.frame.bind(this);
     this.hide = () => {
-      this.previous = performance.now();
+      this.previous = null;
       this.clock.accumulator = 0;
       this.input.blur();
     };
@@ -59,7 +61,12 @@ export class Runtime {
   }
   frame(now) {
     if (!this.running) return;
-    const rawDt = (now - this.previous) / 1000;
+    if (this.previous === null) {
+      this.previous = now;
+      requestAnimationFrame(this.frame);
+      return;
+    }
+    const rawDt = Math.max(0, (now - this.previous) / 1000);
     const dt = Math.min(rawDt, 0.1);
     this.previous = now;
     if (document.hidden) {
@@ -83,7 +90,7 @@ export class Runtime {
         this.streaming.isReady(this.player.body.translation())
       ) {
         const input = this.overrideInput ?? this.input.sample(step);
-        if (this.inspectLab && !this.overrideInput)
+        if ((this.inspectLab || this.inspectHuman) && !this.overrideInput)
           Object.assign(input, { x: 0, z: 0, jump: false, sprint: false });
         this.player.step(step, input);
         this.world.step();
@@ -92,7 +99,12 @@ export class Runtime {
     });
     this.player.sync();
     if (this.player.body.translation().y < -10) this.reset();
-    if (this.input.enabled && !this.inspectLab && this.input.consume("KeyE"))
+    if (
+      this.input.enabled &&
+      !this.inspectLab &&
+      !this.inspectHuman &&
+      this.input.consume("KeyE")
+    )
       notice(this.depot.interact(this.player));
     const pos = this.player.mesh.position;
     this.cameraTarget.copy(pos).add(new T.Vector3(0, 0.7, 0));
@@ -138,6 +150,15 @@ export class Runtime {
       this.camera.lookAt(0, 1.15, -6);
     }
 
+    if (this.inspectHuman) {
+      this.camera.position.set(
+        pos.x + Math.sin(this.input.yaw + 0.3) * 3.1,
+        pos.y + 0.55,
+        pos.z + Math.cos(this.input.yaw + 0.3) * 3.1,
+      );
+      this.camera.lookAt(pos.x, pos.y + 0.15, pos.z);
+    }
+    this.humans.update(this.time, dt);
     this.photon.render(this.time, dt, rawDt);
     this.metrics.record(
       rawDt,
@@ -186,6 +207,7 @@ export class Runtime {
       "webglcontextlost",
       this.contextLost,
     );
+    this.humans.dispose();
     this.input.dispose();
     this.depot.dispose();
     this.player.dispose(this.scene);

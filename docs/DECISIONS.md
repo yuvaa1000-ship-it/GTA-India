@@ -32,3 +32,7 @@
 ## PHOTON target hardware clarification — 2026-09-12
 
 USER DIRECTION: target modern GPUs in the 60+ CU class with RT capabilities. Preserve the high-quality rendering path even when the local Intel HD 2000 runs slowly. Local measurements qualify compatibility and expose bugs; they do not define the intended visual ceiling. Actual hardware ray tracing remains unimplemented in this WebGL2 backend. A specific modern GPU/resolution baseline is required before advertising a frame-rate target.
+
+## HUMAN — 2026-09-13
+
+USER DIRECTION: eventual GTA VI-like graphical ambition in an original Indian setting; do not make the local PC the production target. DESIGN CHOICE: establish a replaceable weighted procedural character framework with deterministic identity and separately owned representations, retaining full hero geometry. CONFIRMED IMPLEMENTATION: Three SkinnedMesh/linear blend skinning, original parametric assets, named 51-bone rig, bounded crowd, surface controls and broad contact capsules. EXPERIMENTAL: procedural gait, morph corrections and facial surface forms. Production art, mocap and high-end hardware acceptance remain necessary; operation count is not proof of AAA quality. No third-party assets were generated or bought during this milestone.

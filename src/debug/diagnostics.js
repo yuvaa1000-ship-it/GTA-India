@@ -22,6 +22,10 @@ export async function diagnostics(r) {
       .map((t) => `${t.passed ? "PASS" : "FAIL"} ${t.name}: ${t.detail}`)
       .join("\n");
   };
+  const simulate = async (seconds) => {
+    const end = r.clock.elapsed + seconds;
+    await until(() => r.clock.elapsed >= end, 30000);
+  };
   const oldEnabled = r.input.enabled;
   r.input.enabled = false;
   r.overrideInput = { x: 0, z: 0, jump: false, sprint: false };
@@ -30,7 +34,7 @@ export async function diagnostics(r) {
     await until(
       () => r.streaming.cells.size === 25 && r.streaming.pending.size === 0,
     );
-    await wait(1000);
+    await simulate(1);
     check(
       "Ground contact",
       r.player.grounded &&
@@ -40,7 +44,7 @@ export async function diagnostics(r) {
     );
     const start = { ...r.player.body.translation() };
     r.overrideInput = { x: 0, z: -1, jump: false, sprint: false };
-    await wait(1000);
+    await simulate(1);
     r.overrideInput = { x: 0, z: 0, jump: false, sprint: false };
     check(
       "Locomotion",
@@ -49,18 +53,18 @@ export async function diagnostics(r) {
     );
     const baseY = r.player.body.translation().y;
     r.overrideInput.jump = true;
-    await wait(150);
+    await simulate(0.15);
     r.overrideInput.jump = false;
     check(
       "Jump",
       r.player.body.translation().y > baseY + 0.3,
       `height delta ${(r.player.body.translation().y - baseY).toFixed(2)}m`,
     );
-    await wait(1100);
+    await simulate(1.1);
     r.player.teleport({ x: 0, y: 1.1, z: 20 });
-    await wait(300);
+    await simulate(0.3);
     r.overrideInput = { x: 1, z: 0, jump: false, sprint: true };
-    await wait(2100);
+    await simulate(2.1);
     r.overrideInput = { x: 0, z: 0, jump: false, sprint: false };
     const wallX = r.player.body.translation().x;
     const building = r.streaming.cells
@@ -106,8 +110,9 @@ export async function diagnostics(r) {
     );
     check(
       "Geometry lifetime",
-      r.renderer.info.memory.geometries <= geometryBaseline,
-      `${geometryBaseline} before / ${r.renderer.info.memory.geometries} after`,
+      r.renderer.info.memory.geometries <=
+        geometryBaseline + (r.humans?.maxAnimated ?? 0),
+      `${geometryBaseline} before / ${r.renderer.info.memory.geometries} after; human allocation allowance ${r.humans?.maxAnimated ?? 0}`,
     );
     check(
       "Persistent prop",

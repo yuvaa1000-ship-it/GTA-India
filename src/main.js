@@ -1,12 +1,15 @@
 import "./style.css";
 import { Runtime } from "./core/runtime.js";
 import { diagnostics } from "./debug/diagnostics.js";
+import { validateHumans } from "./debug/human-validation.js";
 import { compareRendering } from "./debug/photon-validation.js";
 import { notice } from "./ui/hud.js";
 try {
   const runtime = await new Runtime().init();
   document.querySelector("#play").onclick = () => {
     runtime.inspectLab = false;
+    runtime.inspectHuman = false;
+    document.querySelector("#human-camera").textContent = "Inspect character";
     document.querySelector("#lab-camera").textContent = "Inspect materials";
     runtime.input.enabled = true;
     document.querySelector("#panel").hidden = true;
@@ -31,6 +34,8 @@ try {
   document.querySelector("#adaptive").onchange = (e) =>
     (runtime.photon.adaptive = e.target.checked);
   document.querySelector("#lab-camera").onclick = (e) => {
+    runtime.inspectHuman = false;
+    document.querySelector("#human-camera").textContent = "Inspect character";
     runtime.inspectLab = !runtime.inspectLab;
     if (runtime.inspectLab) runtime.reset();
     document.querySelector("#panel").hidden = true;
@@ -38,6 +43,20 @@ try {
     e.target.textContent = runtime.inspectLab
       ? "Follow player"
       : "Inspect materials";
+  };
+  document.querySelector("#human-camera").onclick = (e) => {
+    runtime.inspectHuman = !runtime.inspectHuman;
+    runtime.inspectLab = false;
+    document.querySelector("#lab-camera").textContent = "Inspect materials";
+    document.querySelector("#panel").hidden = true;
+    runtime.input.enabled = true;
+    if (runtime.inspectHuman) {
+      runtime.reset();
+      runtime.humans.heroYaw = 0;
+    }
+    e.target.textContent = runtime.inspectHuman
+      ? "Follow character"
+      : "Inspect character";
   };
   document.querySelector("#hud-toggle").onclick = (e) => {
     const hud = document.querySelector("#hud");
@@ -47,6 +66,8 @@ try {
   document.querySelector("#probe").onclick = () =>
     (runtime.photon.reflections.dirty = true);
   const runValidation = async (validate) => {
+    const inspectHuman = runtime.inspectHuman;
+    runtime.inspectHuman = false;
     const controls = [...document.querySelectorAll("button, select, input")];
     const disabled = controls.map((c) => c.disabled);
     controls.forEach((c) => {
@@ -56,17 +77,22 @@ try {
     try {
       await validate(runtime);
     } finally {
+      runtime.inspectHuman = inspectHuman;
       controls.forEach((c, i) => {
         c.disabled = disabled[i];
       });
       document.querySelector("#close-report").hidden = false;
     }
   };
+  document.querySelector("#human-test").onclick = () =>
+    runValidation(validateHumans);
   document.querySelector("#photon-test").onclick = () =>
     runValidation(compareRendering);
   document.querySelector("#save").onclick = () => runtime.save();
   document.querySelector("#load").onclick = () => {
     runtime.inspectLab = false;
+    runtime.inspectHuman = false;
+    document.querySelector("#human-camera").textContent = "Inspect character";
     document.querySelector("#lab-camera").textContent = "Inspect materials";
     runtime.load();
   };
@@ -84,7 +110,7 @@ try {
     );
     const a = document.createElement("a");
     a.href = url;
-    a.download = "photon-runtime-report.json";
+    a.download = "human-runtime-report.json";
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };

@@ -28,6 +28,8 @@ test("Fixed clock bounds stalls and produces frame-rate independent steps", () =
   for (let i = 0; i < 60; i++) a.advance(1 / 60, () => na++);
   for (let i = 0; i < 120; i++) b.advance(1 / 120, () => nb++);
   assert.equal(na, nb);
+  assert.ok(Math.abs(a.elapsed - na / 60) < 1e-9);
+  assert.ok(Math.abs(a.elapsed - b.elapsed) < 1e-9);
   assert.equal(
     a.advance(5, () => {}),
     5,

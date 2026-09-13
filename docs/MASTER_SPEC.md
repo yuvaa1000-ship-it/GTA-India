@@ -17,3 +17,7 @@ Runnable WebGL2 scene, capsule control, collidable world and dynamic props, came
 ## Originality
 
 Navapur and Old Port are original working place names. All geometry is procedural boxes/capsules and original code; no competitor assets or claims about competitor internals. Project title is the user's working title, not a Rockstar affiliation. Asset imports must carry provenance and license records.
+
+## HUMAN milestone
+
+The reusable character contract now lives in HUMAN_SPEC.md: original procedural weighted humans, deterministic identity, bounded representation tiers and explicit asset ownership. SYSTEM_STATUS.md is authoritative for verified versus limited behavior. Final art and animation must advance toward the user's high-end Indian open-world quality target; the local compatibility machine does not set the project's visual ceiling.

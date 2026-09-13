@@ -15,10 +15,12 @@ export function updateHUD(m) {
           fmt(m.photon?.exposure ?? null) +
           " / " +
           fmt(m.photon?.renderScale ?? null),
+        "Human pose / rigs":
+          fmt(m.humans?.cpuMs ?? null) + " ms / " + m.animationAgents,
         Physics: fmt(m.physicsMs) + " ms",
         "Population / stream": fmt(m.aiMs) + " / " + fmt(m.streamingMs) + " ms",
         "Draws / triangles": m.drawCalls + " / " + m.triangles.toLocaleString(),
-        "NPC / vehicle proxies": m.npcs + " / " + m.vehicles,
+        "Citizens / vehicle proxies": m.npcs + " / " + m.vehicles,
         "Rigid / animation bodies": m.rigidBodies + " / " + m.animationAgents,
         "JS heap": fmt(m.heapMB) + " MB",
         "Resident / queued cells": m.cells + " / " + (m.pending + m.ready),
@@ -28,7 +30,7 @@ export function updateHUD(m) {
       .map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`)
       .join(
         "",
-      )}</dl><div class="coordinates">${m.position.x.toFixed(1)} E · ${m.position.z.toFixed(1)} N <span>PHOTON 0.2</span></div>`;
+      )}</dl><div class="coordinates">${m.position.x.toFixed(1)} E · ${m.position.z.toFixed(1)} N <span>HUMAN 0.3</span></div>`;
 }
 export const notice = (text) => {
   document.querySelector("#notice").textContent = text;

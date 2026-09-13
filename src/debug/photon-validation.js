@@ -33,6 +33,7 @@ export async function compareRendering(r) {
     input: r.input.enabled,
     inspectLab: r.inspectLab,
     exposure: r.photon.post.autoExposure,
+    humansFrozen: r.humans?.validationFrozen,
   };
   r.inspectLab = true;
   r.input.enabled = false;
@@ -109,6 +110,9 @@ export async function compareRendering(r) {
     r.photon.setCondition("sunset");
     await until(() => !r.photon.reflections.dirty);
     await wait(1200);
+    // Hold character ownership constant while isolating render-target cleanup.
+    if (r.humans) r.humans.validationFrozen = true;
+    await wait(1200);
     const memory = { ...r.renderer.info.memory };
     for (let i = 0; i < 3; i++) {
       r.photon.setQuality("performance");
@@ -136,6 +140,7 @@ export async function compareRendering(r) {
     r.lastReport = { operation: "PHOTON", tests, runs, error: error.message };
     report();
   } finally {
+    if (r.humans) r.humans.validationFrozen = original.humansFrozen;
     r.photon.setQuality(original.quality);
     r.photon.setCondition(original.condition);
     r.photon.reflections.setEnabled(original.planar);

@@ -1,7 +1,9 @@
-# Animation
+# HUMAN animation contract
 
-Player capsule movement: IMPLEMENTED BUT LIMITED. Kinematic movement and ground contact are real; rendered capsule has no skeleton, feet, gait, facial rig or physical animation. Animation-agent HUD count is zero.
+The rendered player now has a real 51-bone weighted rig over the preserved Rapier capsule controller. Runtime physics still owns movement; measured displacement/grounded state drive the visual pose. Teleport displacement is rejected from gait-speed estimation. Four cast rigs and bounded streamed citizen rigs share the same named skeleton convention and independent pose state.
 
-NPC/vehicle proxies: IMPLEMENTED BUT LIMITED deterministic transforms of instanced boxes. No motion capture, blend tree, IK, ragdoll, behavior-driven posing or collision avoidance. No claim that these proxies represent HUMAN or EUPHORIA completion.
+IMPLEMENTED BUT LIMITED: linear blend skinning, procedural swing/breathing, jaw/eye bones, finger joints, twist joints, gaze, per-citizen phase/stride/posture, simplified distance pose rates. EXPERIMENTAL: relative blink/smile and elbow-volume morphs, joint-height weights, mesh hair and layered skinned clothes. Character surfaces and collision use separate ownership.
 
-Next character contract: fixed-step velocity + grounded state -> animation controller -> rig pose -> optional IK correction -> visual interpolation. Keep ownership separate from Rapier controller and preserve capsule collision regression tests. Imported assets require explicit provenance.
+PLANNED: authored animation clips, retargeting adapter, locomotion transitions, contact-aware feet/hands, terrain IK, pose interpolation, mocap/motion matching, detailed physical reactions, facial speech, actual cloth/hair simulation. Do not mistake swing equations for production locomotion. The HUD reports active rigs and actual HUMAN CPU cost; it no longer reports zero animation agents.
+
+The next operation should accept velocity, grounded/contact information and intent, then produce a stable pose with measurable foot sliding/contact error. Preserve all physics, lifetime, identity and skin-deformation tests. See HUMAN_SPEC.md.
