@@ -3,86 +3,132 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>GTA INDIA · Prometheus</title>
+    <title>GTA INDIA · Euphoria India</title>
   </head>
   <body>
     <canvas id="game" aria-label="Playable 3D district"></canvas>
     <header>
-      <span class="eyebrow">CHARACTER MOTION / 004</span>
+      <span class="eyebrow">PHYSICAL REACTIONS / 005</span>
       <h1>GTA <em>INDIA</em></h1>
       <p>NAVAPUR · OLD PORT DISTRICT</p>
     </header>
     <aside id="hud" aria-label="Developer performance HUD"></aside>
     <section id="panel">
-      <span class="eyebrow">PROMETHEUS / MOTION LAB</span>
-      <h2>Movement needs<br />contact.</h2>
+      <span class="eyebrow">EUPHORIA INDIA / PHYSICAL REACTIONS</span>
+      <h2>Impact needs<br />consequence.</h2>
       <p>
-        Explore the district, then enter the motion lab to test stairs, terrain
-        and object contact across different body proportions.
+        Test controlled bumps, recovery steps and articulated falls, coupled to
+        the existing movement laboratory.
       </p>
       <button id="play">Enter the district <span>↗</span></button>
       <p class="small">Original procedural characters · Live skinning</p>
     </section>
-    <section id="render-controls" aria-label="Rendering controls">
-      <label
-        >Quality
-        <select id="quality">
-          <option value="performance">Performance</option>
-          <option value="balanced" selected>Balanced</option>
-          <option value="reference">Reference</option>
-        </select></label
-      >
-      <label
-        >Light
-        <select id="condition">
-          <option value="sunset">Sunset</option>
-          <option value="night">Night</option>
-          <option value="rain">Rain</option>
-        </select></label
-      >
-      <label
-        ><input type="checkbox" id="planar" checked /> Puddle reflections</label
-      >
-      <label
-        ><input type="checkbox" id="exposure" checked /> Auto exposure</label
-      >
-      <label><input type="checkbox" id="adaptive" /> Adaptive resolution</label>
-      <button id="human-camera">Inspect character</button
-      ><button id="hud-toggle">Hide HUD</button
-      ><button id="lab-camera">Inspect materials</button
-      ><button id="probe">Refresh probe</button
-      ><button id="photon-test">Compare rendering</button>
-    </section>
-    <section id="motion-controls" aria-label="Motion laboratory">
-      <button id="motion-enter">Enter motion lab</button>
-      <label
-        >Course
-        <select id="motion-station"></select
-      ></label>
-      <button id="motion-go">Go to course</button>
-      <label
-        >Contact
-        <select id="motion-target"></select
-      ></label>
-      <button id="motion-reach">Align and reach</button>
-      <button id="motion-release">Release</button>
-      <button id="motion-bodies">Compare body sizes</button>
-      <label
-        >Movement
-        <select id="motion-style">
-          <option value="road">Natural</option>
-          <option value="wet">Wet surface</option>
-          <option value="mud">Mud</option>
-          <option value="sand">Sand</option>
-          <option value="water">Shallow water</option>
-          <option value="injury">Injured</option>
-          <option value="fatigue">Fatigued</option>
-          <option value="carry">Carrying pose</option>
-          <option value="urgency">Urgent</option>
-        </select></label
-      >
-      <button id="motion-test">Validate motion</button>
-    </section>
+    <details id="tools" open>
+      <summary>Laboratories and rendering controls</summary>
+      <section id="reaction-controls" aria-label="Physical reaction laboratory">
+        <label
+          >Impact
+          <select id="reaction-kind">
+            <option value="bump">Small shoulder bump</option>
+            <option value="push">Hard push / recovery steps</option>
+            <option value="fall">Heavy impact / collapse</option>
+            <option value="motorcycle">Motorcycle impact event</option>
+            <option value="car">Car impact event</option>
+            <option value="brake">Occupant deceleration / brace</option>
+          </select></label
+        >
+        <label
+          >Direction
+          <select id="reaction-direction">
+            <option value="back">Back</option>
+            <option value="front">Front</option>
+            <option value="left">Left</option>
+            <option value="right">Right</option>
+          </select></label
+        >
+        <label
+          >Mass
+          <select id="reaction-mass">
+            <option value="60">60 kg</option>
+            <option value="75" selected>75 kg</option>
+            <option value="100">100 kg</option>
+          </select></label
+        >
+        <label
+          >Friction
+          <select id="reaction-friction">
+            <option value="0.2">Low · 0.2</option>
+            <option value="0.7" selected>Dry · 0.7</option>
+          </select></label
+        >
+        <button id="reaction-impact">Apply impact</button
+        ><button id="reaction-recover">Recover</button
+        ><button id="reaction-test">Validate reactions</button>
+      </section>
+      <section id="render-controls" aria-label="Rendering controls">
+        <label
+          >Quality
+          <select id="quality">
+            <option value="performance">Performance</option>
+            <option value="balanced" selected>Balanced</option>
+            <option value="reference">Reference</option>
+          </select></label
+        >
+        <label
+          >Light
+          <select id="condition">
+            <option value="sunset">Sunset</option>
+            <option value="night">Night</option>
+            <option value="rain">Rain</option>
+          </select></label
+        >
+        <label
+          ><input type="checkbox" id="planar" checked /> Puddle
+          reflections</label
+        >
+        <label
+          ><input type="checkbox" id="exposure" checked /> Auto exposure</label
+        >
+        <label
+          ><input type="checkbox" id="adaptive" /> Adaptive resolution</label
+        >
+        <button id="human-camera">Inspect character</button
+        ><button id="hud-toggle">Hide HUD</button
+        ><button id="lab-camera">Inspect materials</button
+        ><button id="probe">Refresh probe</button
+        ><button id="photon-test">Compare rendering</button>
+      </section>
+      <section id="motion-controls" aria-label="Motion laboratory">
+        <button id="motion-enter">Enter motion lab</button>
+        <label
+          >Course
+          <select id="motion-station"></select
+        ></label>
+        <button id="motion-go">Go to course</button>
+        <label
+          >Contact
+          <select id="motion-target"></select
+        ></label>
+        <button id="motion-reach">Align and reach</button>
+        <button id="motion-release">Release</button>
+        <button id="motion-bodies">Compare body sizes</button>
+        <label
+          >Movement
+          <select id="motion-style">
+            <option value="road">Natural</option>
+            <option value="wet">Wet surface</option>
+            <option value="mud">Mud</option>
+            <option value="sand">Sand</option>
+            <option value="water">Shallow water</option>
+            <option value="injury">Injured</option>
+            <option value="fatigue">Fatigued</option>
+            <option value="carry">Carrying pose</option>
+            <option value="urgency">Urgent</option>
+          </select></label
+        >
+        <button id="motion-test">Validate motion</button>
+      </section>
+    </details>
     <footer>
       <div>
         <b>W A S D</b> Move <b>SHIFT</b> Run <b>SPACE</b> Jump <b>← →</b> Camera

@@ -17,6 +17,21 @@ export function updateHUD(m) {
           fmt(m.photon?.renderScale ?? null),
         "Human pose / rigs":
           fmt(m.humans?.cpuMs ?? null) + " ms / " + m.animationAgents,
+        "Reaction / mode":
+          (m.reactions?.state ?? "balanced") +
+          " / " +
+          (m.reactions?.physical?.bodies ?? 0) +
+          " links",
+        "Physical foot residual":
+          m.reactions?.physicalFootError == null
+            ? "—"
+            : fmt(m.reactions.physicalFootError * 100) + " cm",
+        "Reaction CPU": fmt(m.reactions?.cpuMs ?? 0) + " ms",
+        "COM support / joints":
+          fmt(m.reactions?.balance?.signedSupportDistance ?? null) +
+          " m / " +
+          fmt((m.reactions?.physical?.maxJointError ?? 0) * 100) +
+          " cm",
         "Motion state": m.motion?.state ?? "idle",
         "Foot error / drift":
           fmt((m.motion?.footError ?? 0) * 100) +
@@ -40,7 +55,7 @@ export function updateHUD(m) {
       .map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`)
       .join(
         "",
-      )}</dl><div class="coordinates">${m.position.x.toFixed(1)} E · ${m.position.z.toFixed(1)} N <span>PROMETHEUS 0.4</span></div>`;
+      )}</dl><div class="coordinates">${m.position.x.toFixed(1)} E · ${m.position.z.toFixed(1)} N <span>EUPHORIA INDIA 0.5</span></div>`;
 }
 export const notice = (text) => {
   document.querySelector("#notice").textContent = text;

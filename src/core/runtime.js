@@ -10,6 +10,7 @@ import { Metrics } from "../debug/metrics.js";
 import { updateHUD, notice } from "../ui/hud.js";
 import { Depot } from "../world/depot.js";
 import { MotionDirector } from "../animation/director.js";
+import { PhysicalReactions } from "../physical-animation/system.js";
 import { HumanSystem } from "../characters/system.js";
 import { Photon } from "../rendering/photon.js";
 export class Runtime {
@@ -32,6 +33,7 @@ export class Runtime {
     this.photon = new Photon(this);
     this.humans = new HumanSystem(this);
     this.motion = new MotionDirector(this);
+    this.reactions = new PhysicalReactions(this);
     this.time = 0;
     this.previous = null;
     this.running = true;
@@ -99,8 +101,9 @@ export class Runtime {
           !this.overrideInput
         )
           Object.assign(input, { x: 0, z: 0, jump: false, sprint: false });
-        this.player.step(step, input);
+        if (this.reactions.beforePhysics(step)) this.player.step(step, input);
         this.world.step();
+        this.reactions.afterPhysics(step);
       }
       physicsMs += performance.now() - start;
     });
@@ -177,6 +180,7 @@ export class Runtime {
       this.time,
       Math.max(1 / 120, this.clock.elapsed - simulatedBefore),
     );
+    this.reactions.pose();
     this.photon.render(this.time, dt, rawDt);
     this.metrics.record(
       rawDt,
@@ -192,6 +196,7 @@ export class Runtime {
     requestAnimationFrame(this.frame);
   }
   reset() {
+    this.reactions?.clear();
     if (this.motion.lab.active) this.motion.exit();
     if (this.depot.inside) this.depot.exit(this.player);
     this.player.teleport({ x: 0, y: 2, z: 8 });
@@ -199,6 +204,10 @@ export class Runtime {
     notice("Returned to plaza");
   }
   save() {
+    if (this.reactions.active) {
+      notice("Wait for the physical reaction to recover before saving");
+      return;
+    }
     if (this.motion.lab.active) {
       notice("Leave the motion lab before saving world progress");
       return;
@@ -212,6 +221,7 @@ export class Runtime {
   }
   load() {
     try {
+      this.reactions.clear();
       if (this.motion.lab.active) this.motion.exit();
       const raw = this.store.load();
       const loaded = structuredClone(this.store.props);
@@ -231,6 +241,7 @@ export class Runtime {
       "webglcontextlost",
       this.contextLost,
     );
+    this.reactions.dispose();
     this.motion.dispose();
     this.humans.dispose();
     this.input.dispose();

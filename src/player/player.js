@@ -47,18 +47,34 @@ export class Player {
     if (change.length() > acceleration * dt)
       change.setLength(acceleration * dt);
     this.velocity.add(change);
+    const travel = this.velocity
+      .clone()
+      .add(this.externalVelocity ?? new T.Vector3());
     this.controller.computeColliderMovement(
       this.collider,
       {
-        x: this.velocity.x * dt,
+        x: travel.x * dt,
         y: this.velocityY * dt,
-        z: this.velocity.z * dt,
+        z: travel.z * dt,
       },
       RAPIER.QueryFilterFlags.EXCLUDE_SENSORS,
+      this.collider.collisionGroups(),
     );
     const delta = this.controller.computedMovement(),
       p = this.body.translation();
     this.achievedVelocity.set(delta.x / dt, delta.y / dt, delta.z / dt);
+    this.lastImpact = null;
+    for (let i = 0; i < this.controller.numComputedCollisions(); i++) {
+      const collision = this.controller.computedCollision(i);
+      if (Math.abs(collision.normal1.y) > 0.5) continue;
+      const blocked = travel.clone().sub(this.achievedVelocity).setY(0);
+      if (blocked.length() > 1)
+        this.lastImpact = {
+          speed: blocked.length(),
+          direction: blocked.normalize().negate(),
+          point: collision.witness1,
+        };
+    }
     this.body.setNextKinematicTranslation({
       x: Math.max(-2048, Math.min(2048, p.x + delta.x)),
       y: p.y + delta.y,
@@ -73,6 +89,7 @@ export class Player {
     this.velocityY = 0;
     this.velocity.set(0, 0, 0);
     this.achievedVelocity.set(0, 0, 0);
+    this.lastImpact = null;
     this.grounded = false;
     this.sync();
   }

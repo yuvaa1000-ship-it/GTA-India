@@ -17,6 +17,7 @@ export class MotionDirector {
     this.comparison = false;
   }
   enter() {
+    this.r.reactions?.clear();
     this.r.inspectLab = false;
     this.r.inspectHuman = false;
     if (this.r.depot.inside) this.r.depot.exit(this.r.player);
@@ -24,6 +25,7 @@ export class MotionDirector {
     this.r.humans.heroMotion.reset();
   }
   exit() {
+    this.r.reactions?.clear();
     this.interaction = null;
     this.context = motionContext();
     this.restoreCast();
@@ -40,6 +42,7 @@ export class MotionDirector {
     });
   }
   selectStation(id) {
+    this.r.reactions?.clear();
     if (!this.lab.active) this.enter();
     const station = this.lab.stations.find((s) => s.id === id);
     if (!station) return false;
@@ -59,6 +62,7 @@ export class MotionDirector {
     return true;
   }
   reach(id) {
+    this.r.reactions?.clear();
     if (!this.lab.active) this.enter();
     const target = this.lab.targets.find((t) => t.id === id);
     if (!target) return false;

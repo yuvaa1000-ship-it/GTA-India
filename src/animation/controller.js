@@ -43,6 +43,48 @@ export class MotionController {
     });
     this.resetCount++;
   }
+  requestRecoveryStep({ direction, distance, sampleGround }) {
+    if (
+      this.interaction ||
+      !sampleGround ||
+      this.feet.some((f) => !f.initialized || !f.locked || f.progress < 1)
+    )
+      return false;
+    const push = new T.Vector3(direction.x, 0, direction.z);
+    if (!Number.isFinite(push.lengthSq()) || push.lengthSq() < 1e-8)
+      return false;
+    push.normalize();
+    const c = this.c,
+      h = c.identity.height,
+      yaw = c.group.rotation.y;
+    const right = new T.Vector3(Math.cos(yaw), 0, -Math.sin(yaw));
+    // Lead with the foot on the disturbance side; the other remains support.
+    const i = push.dot(right) >= 0 ? 1 : 0;
+    const f = this.feet[i];
+    const target = c.group.position
+      .clone()
+      .addScaledVector(right, (i ? 1 : -1) * c.identity.hips * 0.55)
+      .addScaledVector(push, clamp(distance, 0.1, h * 0.22));
+    const ground = sampleGround(target.x, target.z, c.group.position.y);
+    if (
+      !ground ||
+      !Number.isFinite(ground.y) ||
+      ground.normal.y < 0.65 ||
+      Math.abs(ground.y - f.point.y) > h * 0.22
+    )
+      return false;
+    target.y = ground.y;
+    if (target.distanceTo(f.point) > h * 0.5) return false;
+    f.from.copy(f.point);
+    f.to.copy(target);
+    f.normal.copy(ground.normal);
+    f.progress = 0;
+    f.locked = false;
+    f.landingYaw = yaw;
+    f.duration = 0.24;
+    this.steps++;
+    return true;
+  }
   update(time, dt, input = {}) {
     dt = clamp(dt, 0, 0.1);
     const destination = this.c.group.position.clone();

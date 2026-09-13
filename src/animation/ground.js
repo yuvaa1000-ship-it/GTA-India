@@ -11,7 +11,8 @@ export function groundSampler(runtime) {
       undefined,
       runtime.player.collider,
       runtime.player.body,
-      (c) => !c.isSensor() && !!c.parent(),
+      (c) =>
+        !c.isSensor() && !!c.parent() && !runtime.reactions?.ownsCollider(c),
     ); // excludes standalone citizen contacts
     if (!hit || hit.normal.y < 0.45) return null;
     return {

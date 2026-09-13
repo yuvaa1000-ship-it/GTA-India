@@ -310,3 +310,54 @@ output {
   max-height: 58vh;
   overflow: auto;
 }
+
+/* One scrollable drawer leaves the rendered character visible on small test screens. */
+#tools {
+  position: fixed;
+  left: 26px;
+  right: 26px;
+  bottom: 86px;
+  max-width: 940px;
+  z-index: 2;
+  background: #102a30ed;
+  border: 1px solid #aac4b744;
+}
+#tools summary {
+  padding: 10px 12px;
+  cursor: pointer;
+  font: 11px monospace;
+  color: #efd4a3;
+}
+#tools[open] {
+  max-height: 30vh;
+  overflow: auto;
+}
+#tools #render-controls,
+#tools #motion-controls,
+#tools #reaction-controls {
+  position: static;
+  max-width: none;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  font: 11px monospace;
+}
+#reaction-controls label {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+#tools select {
+  background: #213e42;
+  color: #e7ddc6;
+  border: 1px solid #658780;
+  padding: 4px;
+}
+[hidden] {
+  display: none !important;
+}

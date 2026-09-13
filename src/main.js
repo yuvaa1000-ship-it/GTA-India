@@ -1,6 +1,8 @@
 import "./style.css";
 import { Runtime } from "./core/runtime.js";
 import { diagnostics } from "./debug/diagnostics.js";
+import { runReactionScenario } from "./physical-animation/scenarios.js";
+import { validateReactions } from "./debug/reaction-validation.js";
 import { validateMotion } from "./debug/motion-validation.js";
 import { validateHumans } from "./debug/human-validation.js";
 import { compareRendering } from "./debug/photon-validation.js";
@@ -67,6 +69,7 @@ try {
   document.querySelector("#probe").onclick = () =>
     (runtime.photon.reflections.dirty = true);
   const runValidation = async (validate) => {
+    runtime.validation = true;
     const inspectHuman = runtime.inspectHuman;
     runtime.inspectHuman = false;
     const controls = [...document.querySelectorAll("button, select, input")];
@@ -78,6 +81,7 @@ try {
     try {
       await validate(runtime);
     } finally {
+      runtime.validation = false;
       runtime.inspectHuman = inspectHuman;
       controls.forEach((c, i) => {
         c.disabled = disabled[i];
@@ -154,6 +158,31 @@ try {
       urgency: value === "urgency" ? 1 : 0,
     };
   };
+  document.querySelector("#reaction-impact").onclick = () => {
+    runReactionScenario(
+      runtime,
+      document.querySelector("#reaction-kind").value,
+      {
+        direction: document.querySelector("#reaction-direction").value,
+        mass: Number(document.querySelector("#reaction-mass").value),
+        friction: Number(document.querySelector("#reaction-friction").value),
+      },
+    );
+    document.querySelector("#panel").hidden = true;
+    runtime.input.enabled = true;
+    notice("Physical impact applied · Hero body response is live");
+  };
+  document.querySelector("#reaction-recover").onclick = () => {
+    if (runtime.reactions.fullPhysical) {
+      notice(
+        runtime.reactions.beginRecovery()
+          ? "Recovering into locomotion"
+          : "Recovery needs clear supported ground",
+      );
+    } else runtime.reactions.clear();
+  };
+  document.querySelector("#reaction-test").onclick = () =>
+    runValidation(validateReactions);
   document.querySelector("#motion-test").onclick = () =>
     runValidation(validateMotion);
 
@@ -183,7 +212,7 @@ try {
     );
     const a = document.createElement("a");
     a.href = url;
-    a.download = "prometheus-runtime-report.json";
+    a.download = "euphoria-runtime-report.json";
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
