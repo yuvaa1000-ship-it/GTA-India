@@ -1,6 +1,7 @@
 import "./style.css";
 import { Runtime } from "./core/runtime.js";
 import { diagnostics } from "./debug/diagnostics.js";
+import { validateMotion } from "./debug/motion-validation.js";
 import { validateHumans } from "./debug/human-validation.js";
 import { compareRendering } from "./debug/photon-validation.js";
 import { notice } from "./ui/hud.js";
@@ -82,8 +83,80 @@ try {
         c.disabled = disabled[i];
       });
       document.querySelector("#close-report").hidden = false;
+      syncMotionUI();
     }
   };
+
+  const fillMotionTargets = () => {
+    document.querySelector("#motion-station").innerHTML =
+      runtime.motion.lab.stations
+        .map((s) => `<option value="${s.id}">${s.label}</option>`)
+        .join("");
+    document.querySelector("#motion-target").innerHTML =
+      runtime.motion.lab.targets
+        .map((t) => `<option value="${t.id}">${t.label}</option>`)
+        .join("");
+  };
+  fillMotionTargets();
+  document.querySelector("#motion-enter").onclick = (e) => {
+    if (runtime.motion.lab.active) {
+      runtime.motion.exit();
+      e.target.textContent = "Enter motion lab";
+    } else {
+      runtime.motion.enter();
+      fillMotionTargets();
+      e.target.textContent = "Leave motion lab";
+    }
+    document.querySelector("#panel").hidden = true;
+    runtime.input.enabled = true;
+    notice(
+      "Motion lab · Choose a course, walk with WASD, or align to a contact",
+    );
+  };
+  document.querySelector("#motion-go").onclick = () => {
+    runtime.motion.selectStation(
+      document.querySelector("#motion-station").value,
+    );
+    fillTargetsOnly();
+    document.querySelector("#panel").hidden = true;
+    runtime.input.enabled = true;
+  };
+  const fillTargetsOnly = () => {
+    if (!document.querySelector("#motion-target").options.length)
+      document.querySelector("#motion-target").innerHTML =
+        runtime.motion.lab.targets
+          .map((t) => `<option value="${t.id}">${t.label}</option>`)
+          .join("");
+    document.querySelector("#motion-enter").textContent = "Leave motion lab";
+  };
+  document.querySelector("#motion-reach").onclick = () => {
+    runtime.motion.reach(
+      document.querySelector("#motion-target").value || "car-door",
+    );
+    notice("Contact pose · Release to resume movement");
+  };
+  document.querySelector("#motion-bodies").onclick = () => {
+    runtime.motion.compareBodies();
+    notice("Two body sizes retarget the same physical handle");
+  };
+  document.querySelector("#motion-release").onclick = () => {
+    runtime.motion.interaction = null;
+    if (runtime.motion.comparison) runtime.motion.restoreCast();
+    notice("Contact released");
+  };
+  document.querySelector("#motion-style").onchange = (e) => {
+    const value = e.target.value;
+    runtime.motion.context = {
+      surface: ["wet", "mud", "sand", "water"].includes(value) ? value : "road",
+      injury: value === "injury" ? 0.7 : 0,
+      fatigue: value === "fatigue" ? 0.8 : 0,
+      carry: value === "carry",
+      urgency: value === "urgency" ? 1 : 0,
+    };
+  };
+  document.querySelector("#motion-test").onclick = () =>
+    runValidation(validateMotion);
+
   document.querySelector("#human-test").onclick = () =>
     runValidation(validateHumans);
   document.querySelector("#photon-test").onclick = () =>
@@ -110,10 +183,45 @@ try {
     );
     const a = document.createElement("a");
     a.href = url;
-    a.download = "human-runtime-report.json";
+    a.download = "prometheus-runtime-report.json";
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
+  function syncMotionUI() {
+    document.querySelector("#motion-enter").textContent = runtime.motion.lab
+      .active
+      ? "Leave motion lab"
+      : "Enter motion lab";
+    const select = document.querySelector("#motion-target"),
+      previous = select.value;
+    select.innerHTML = runtime.motion.lab.targets
+      .map((t) => `<option value="${t.id}">${t.label}</option>`)
+      .join("");
+    if ([...select.options].some((o) => o.value === previous))
+      select.value = previous;
+    if (runtime.motion.lab.active) {
+      document.querySelector("#panel").hidden = true;
+      runtime.input.enabled = true;
+    }
+    document.querySelector("#human-camera").textContent = runtime.inspectHuman
+      ? "Follow character"
+      : "Inspect character";
+    document.querySelector("#lab-camera").textContent = runtime.inspectLab
+      ? "Follow player"
+      : "Inspect materials";
+  }
+  for (const id of [
+    "play",
+    "load",
+    "reset",
+    "human-camera",
+    "lab-camera",
+    "motion-enter",
+    "motion-go",
+    "motion-reach",
+    "motion-bodies",
+  ])
+    document.querySelector("#" + id).addEventListener("click", syncMotionUI);
   addEventListener("pagehide", () => runtime.dispose(), { once: true });
 } catch (error) {
   notice(`Startup failed: ${error.message}`);

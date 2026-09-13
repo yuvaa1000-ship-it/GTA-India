@@ -17,6 +17,16 @@ export function updateHUD(m) {
           fmt(m.photon?.renderScale ?? null),
         "Human pose / rigs":
           fmt(m.humans?.cpuMs ?? null) + " ms / " + m.animationAgents,
+        "Motion state": m.motion?.state ?? "idle",
+        "Foot error / drift":
+          fmt((m.motion?.footError ?? 0) * 100) +
+          " / " +
+          fmt((m.motion?.footActualSlide ?? 0) * 100) +
+          " cm",
+        "Hand error":
+          m.motion?.reachError == null
+            ? "—"
+            : fmt(m.motion.reachError * 100) + " cm",
         Physics: fmt(m.physicsMs) + " ms",
         "Population / stream": fmt(m.aiMs) + " / " + fmt(m.streamingMs) + " ms",
         "Draws / triangles": m.drawCalls + " / " + m.triangles.toLocaleString(),
@@ -30,7 +40,7 @@ export function updateHUD(m) {
       .map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`)
       .join(
         "",
-      )}</dl><div class="coordinates">${m.position.x.toFixed(1)} E · ${m.position.z.toFixed(1)} N <span>HUMAN 0.3</span></div>`;
+      )}</dl><div class="coordinates">${m.position.x.toFixed(1)} E · ${m.position.z.toFixed(1)} N <span>PROMETHEUS 0.4</span></div>`;
 }
 export const notice = (text) => {
   document.querySelector("#notice").textContent = text;

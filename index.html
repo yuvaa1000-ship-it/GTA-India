@@ -3,23 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>GTA INDIA · Human</title>
+    <title>GTA INDIA · Prometheus</title>
   </head>
   <body>
     <canvas id="game" aria-label="Playable 3D district"></canvas>
     <header>
-      <span class="eyebrow">CHARACTER FRAMEWORK / 003</span>
+      <span class="eyebrow">CHARACTER MOTION / 004</span>
       <h1>GTA <em>INDIA</em></h1>
       <p>NAVAPUR · OLD PORT DISTRICT</p>
     </header>
     <aside id="hud" aria-label="Developer performance HUD"></aside>
     <section id="panel">
-      <span class="eyebrow">HUMAN / LIVING IDENTITIES</span>
-      <h2>People make<br />the city.</h2>
+      <span class="eyebrow">PROMETHEUS / MOTION LAB</span>
+      <h2>Movement needs<br />contact.</h2>
       <p>
-        Explore the district with a skinned character and deterministic
-        citizens. Inspect the character framework and compare lighting
-        conditions.
+        Explore the district, then enter the motion lab to test stairs, terrain
+        and object contact across different body proportions.
       </p>
       <button id="play">Enter the district <span>↗</span></button>
       <p class="small">Original procedural characters · Live skinning</p>
@@ -53,6 +52,36 @@
       ><button id="lab-camera">Inspect materials</button
       ><button id="probe">Refresh probe</button
       ><button id="photon-test">Compare rendering</button>
+    </section>
+    <section id="motion-controls" aria-label="Motion laboratory">
+      <button id="motion-enter">Enter motion lab</button>
+      <label
+        >Course
+        <select id="motion-station"></select
+      ></label>
+      <button id="motion-go">Go to course</button>
+      <label
+        >Contact
+        <select id="motion-target"></select
+      ></label>
+      <button id="motion-reach">Align and reach</button>
+      <button id="motion-release">Release</button>
+      <button id="motion-bodies">Compare body sizes</button>
+      <label
+        >Movement
+        <select id="motion-style">
+          <option value="road">Natural</option>
+          <option value="wet">Wet surface</option>
+          <option value="mud">Mud</option>
+          <option value="sand">Sand</option>
+          <option value="water">Shallow water</option>
+          <option value="injury">Injured</option>
+          <option value="fatigue">Fatigued</option>
+          <option value="carry">Carrying pose</option>
+          <option value="urgency">Urgent</option>
+        </select></label
+      >
+      <button id="motion-test">Validate motion</button>
     </section>
     <footer>
       <div>

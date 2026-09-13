@@ -9,6 +9,7 @@ import { FixedClock } from "./clock.js";
 import { Metrics } from "../debug/metrics.js";
 import { updateHUD, notice } from "../ui/hud.js";
 import { Depot } from "../world/depot.js";
+import { MotionDirector } from "../animation/director.js";
 import { HumanSystem } from "../characters/system.js";
 import { Photon } from "../rendering/photon.js";
 export class Runtime {
@@ -30,6 +31,7 @@ export class Runtime {
     this.metrics = new Metrics(this.renderer);
     this.photon = new Photon(this);
     this.humans = new HumanSystem(this);
+    this.motion = new MotionDirector(this);
     this.time = 0;
     this.previous = null;
     this.running = true;
@@ -82,6 +84,8 @@ export class Runtime {
       this.time,
     );
     const streamMs = performance.now() - streamStart;
+    this.motion.update();
+    const simulatedBefore = this.clock.elapsed;
     let physicsMs = 0;
     this.clock.advance(dt, (step) => {
       const start = performance.now();
@@ -90,7 +94,10 @@ export class Runtime {
         this.streaming.isReady(this.player.body.translation())
       ) {
         const input = this.overrideInput ?? this.input.sample(step);
-        if ((this.inspectLab || this.inspectHuman) && !this.overrideInput)
+        if (
+          (this.inspectLab || this.inspectHuman || this.motion.interaction) &&
+          !this.overrideInput
+        )
           Object.assign(input, { x: 0, z: 0, jump: false, sprint: false });
         this.player.step(step, input);
         this.world.step();
@@ -103,15 +110,16 @@ export class Runtime {
       this.input.enabled &&
       !this.inspectLab &&
       !this.inspectHuman &&
+      !this.motion.lab.active &&
       this.input.consume("KeyE")
     )
       notice(this.depot.interact(this.player));
     const pos = this.player.mesh.position;
     this.cameraTarget.copy(pos).add(new T.Vector3(0, 0.7, 0));
     const desired = new T.Vector3(
-      Math.sin(this.input.yaw) * 10,
-      5,
-      Math.cos(this.input.yaw) * 10,
+      Math.sin(this.input.yaw) * (this.motion.lab.active ? 6 : 10),
+      this.motion.lab.active ? 3 : 5,
+      Math.cos(this.input.yaw) * (this.motion.lab.active ? 6 : 10),
     ).add(this.cameraTarget);
     const dir = desired.clone().sub(this.cameraTarget);
     this.raycaster.set(this.cameraTarget, dir.clone().normalize());
@@ -131,6 +139,13 @@ export class Runtime {
               point.distanceTo(this.cameraTarget),
             );
         }
+    }
+    if (this.motion.lab.active) {
+      const hit = this.raycaster.intersectObject(
+        this.motion.lab.group,
+        true,
+      )[0];
+      if (hit) collisionDistance = Math.min(collisionDistance, hit.distance);
     }
     if (collisionDistance < dir.length())
       desired
@@ -158,7 +173,10 @@ export class Runtime {
       );
       this.camera.lookAt(pos.x, pos.y + 0.15, pos.z);
     }
-    this.humans.update(this.time, dt);
+    this.humans.update(
+      this.time,
+      Math.max(1 / 120, this.clock.elapsed - simulatedBefore),
+    );
     this.photon.render(this.time, dt, rawDt);
     this.metrics.record(
       rawDt,
@@ -174,12 +192,17 @@ export class Runtime {
     requestAnimationFrame(this.frame);
   }
   reset() {
+    if (this.motion.lab.active) this.motion.exit();
     if (this.depot.inside) this.depot.exit(this.player);
     this.player.teleport({ x: 0, y: 2, z: 8 });
     this.input.yaw = 0;
     notice("Returned to plaza");
   }
   save() {
+    if (this.motion.lab.active) {
+      notice("Leave the motion lab before saving world progress");
+      return;
+    }
     this.streaming.persist();
     notice(
       this.store.save(
@@ -189,6 +212,7 @@ export class Runtime {
   }
   load() {
     try {
+      if (this.motion.lab.active) this.motion.exit();
       const raw = this.store.load();
       const loaded = structuredClone(this.store.props);
       if (this.depot.inside) this.depot.exit(this.player);
@@ -207,6 +231,7 @@ export class Runtime {
       "webglcontextlost",
       this.contextLost,
     );
+    this.motion.dispose();
     this.humans.dispose();
     this.input.dispose();
     this.depot.dispose();

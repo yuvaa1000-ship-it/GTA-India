@@ -54,3 +54,7 @@ The developer HUD exposes a subset; exported metrics carry additional pass and c
 ## HUMAN capacity and production quality
 
 Modern high-end hardware remains the target. HUMAN keeps the full generated hero (~35,304 triangles, 51 bones) and four cast rigs independent of local render FPS. Maximum streamed weighted actors: 12; other residents use one far instanced representation or data only. Up to 100 resident citizen identities, plus hero and 4 cast. Up to 18 human geometry resources and 17 active skeletons; each near character has 6 material groups and up to 3 morph targets. Tier 1 contact capsules add colliders but no rigid bodies. The current local renderer is a compatibility measurement; no modern-GPU throughput, 60 FPS acceptance or RT execution is claimed. See HUMAN_SPEC and HUMAN evidence for measured costs and artifacts.
+
+## PROMETHEUS costs and bounds
+
+Motion retains HUMAN's hero geometry and crowd cap. A moving character can take up to six bounded pose substeps per rendered update; final matrices are submitted once per render. IK and retargeting use CPU vector/quaternion work, not GPU compute or a neural network. Telemetry records actual endpoint errors and update cost; cadence tests observe every substep. The removable lab owns 34 bodies/colliders, one geometry and five materials. Its return to baseline waits for both streaming requests and ready cell uploads. Modern target GPU acceptance and total VRAM cost remain unmeasured. See evidence for local timing, with shader/driver and capture overhead explicitly included.

@@ -1,4 +1,7 @@
 import * as T from "three";
+import { createRetargeter } from "../animation/retarget.js";
+import { MotionController } from "../animation/controller.js";
+import { angleDelta } from "../animation/grammar.js";
 import { HumanContact } from "./contact.js";
 import { HumanSurfaces } from "./surface.js";
 import { HumanCharacter } from "./character.js";
@@ -22,6 +25,7 @@ export class HumanSystem {
       accessory: "none",
     };
     this.hero = new HumanCharacter(hero, this.surfaces, 0);
+    this.heroMotion = new MotionController(this.hero);
     runtime.scene.add(this.hero.group);
     runtime.player.mesh.visible = false;
     this.previous = new T.Vector3().copy(runtime.player.mesh.position);
@@ -35,6 +39,8 @@ export class HumanSystem {
       );
       c.group.position.set(-3.5 + i * 2.3, 0.06, 3);
       runtime.scene.add(c.group);
+      c.motion = new MotionController(c);
+      c.retargeter = createRetargeter(this.hero.rig, c.rig);
       return c;
     });
     const d = citizenIdentity("far-template"),
@@ -68,11 +74,22 @@ export class HumanSystem {
     const speed = dt > 0 && displacement < 2 ? displacement / dt : 0;
     this.speed = T.MathUtils.lerp(this.speed, speed, 1 - Math.exp(-dt * 10));
     if (displacement > 0.001 && displacement < 2)
-      this.heroYaw = Math.atan2(dx, dz);
+      this.heroYaw += T.MathUtils.clamp(
+        angleDelta(this.heroYaw, Math.atan2(dx, dz)),
+        -dt * 5,
+        dt * 5,
+      );
     this.previous.copy(p);
     this.hero.group.position.copy(p).y -= 0.87;
     this.hero.group.rotation.y = this.heroYaw;
-    this.hero.pose(time, dt, this.speed, r.player.grounded);
+    this.heroMotion.context = r.motion?.context ?? {};
+    this.heroMotion.interaction = r.motion?.interaction ?? null;
+    this.heroMotion.update(time, dt, {
+      speed: this.speed,
+      grounded: r.player.grounded,
+      vertical: r.player.velocityY,
+      sampleGround: r.motion?.sample,
+    });
     const wet = Number(r.photon.atmosphere.condition.rain);
     this.hero.weather(wet);
     for (let i = 0; i < this.cast.length; i++) {
@@ -81,7 +98,34 @@ export class HumanSystem {
       a.expression = 0.15 + (Math.sin(time * 0.3 + i) + 1) * 0.15;
       if (a.group.visible) {
         a.weather(wet);
-        a.pose(time, dt, 0, true, Math.sin(time * 0.2 + i) * 0.35);
+        const compare = r.motion?.comparison && i < 2;
+        if (!compare) a.motion.interaction = null;
+        a.motion.update(time, dt, {
+          speed: 0,
+          grounded: true,
+          gaze: Math.sin(time * 0.2 + i) * 0.35,
+          sampleGround: r.motion?.sample,
+        });
+        if (compare) {
+          const side = i ? "R" : "L",
+            target = a.motion.interaction.position;
+          const contacts = {};
+          contacts["arm" + side] = {
+            target,
+            pole: a.group.position
+              .clone()
+              .add(new T.Vector3(0, 1, i ? -0.6 : 0.6)),
+          };
+          for (const f of a.motion.feet)
+            contacts["leg" + f.side] = {
+              target: f.point
+                .clone()
+                .addScaledVector(f.normal, a.identity.height * 0.06),
+              pole: a.group.position.clone().add(new T.Vector3(1, 0.5, 0)),
+            };
+          a.retargetResult = a.retargeter.apply({ contacts });
+          a.rig.skeleton.update();
+        }
       }
     }
     r.camera.updateMatrixWorld(true);
@@ -140,6 +184,7 @@ export class HumanSystem {
     for (const item of selected)
       if (!this.actors.has(item.identity.id)) {
         const a = new HumanCharacter(item.identity, this.surfaces, item.tier);
+        a.motion = new MotionController(a);
         r.scene.add(a.group);
         if (item.tier === 1)
           a.contact = new HumanContact(r.world, item.identity.height);
@@ -164,12 +209,20 @@ export class HumanSystem {
         actor.weather(wet);
         const hz = item.tier === 1 ? 60 : 12;
         if (time - (actor.lastPose ?? -1) >= 1 / hz) {
-          actor.pose(
+          actor.motion.context = { surface: wet ? "wet" : "road" };
+          actor.motion.update(
             time,
-            Math.min(0.15, time - (actor.lastPose ?? time - dt)),
-            item.speed,
-            true,
-            Math.sin(time * 0.2 + item.identity.phase) * 0.18,
+            Math.min(0.1, time - (actor.lastPose ?? time - dt)),
+            {
+              speed: item.speed,
+              grounded: true,
+              sampleGround: r.motion?.sample,
+              velocity: {
+                x: Math.sin(item.yaw) * item.speed,
+                z: Math.cos(item.yaw) * item.speed,
+              },
+              gaze: Math.sin(time * 0.2 + item.identity.phase) * 0.18,
+            },
           );
           actor.lastPose = time;
         }
@@ -208,6 +261,7 @@ export class HumanSystem {
       generations: this.generations,
       heroPoseUpdates: this.hero.poseUpdates,
       identityVersion: 1,
+      motion: this.heroMotion.metrics,
       geometryBound: 1 + this.cast.length + this.maxAnimated + 1,
     };
   }

@@ -82,6 +82,7 @@ export class Metrics {
       rigidBodies: runtime.world.bodies.len(),
       animationAgents: runtime.humans?.stats().activeRigs ?? 0,
       humans: runtime.humans?.stats() ?? null,
+      motion: runtime.motion?.stats() ?? null,
       pool: runtime.streaming.pool.length,
       created: runtime.streaming.created,
       evicted: runtime.streaming.evicted,

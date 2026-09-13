@@ -283,3 +283,30 @@ output {
     font-size: 9px;
   }
 }
+
+#motion-controls {
+  position: fixed;
+  left: 26px;
+  right: 26px;
+  bottom: 230px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 9px 12px;
+  background: #102e36ed;
+  font-size: 11px;
+  max-width: 930px;
+}
+#motion-controls label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+#render-controls {
+  bottom: 85px;
+}
+#hud {
+  max-height: 58vh;
+  overflow: auto;
+}
