@@ -53,7 +53,7 @@ The developer HUD exposes a subset; exported metrics carry additional pass and c
 
 ## HUMAN capacity and production quality
 
-Modern high-end hardware remains the target. HUMAN keeps the full generated hero (32,268 triangles after OP05, 51 bones) and four cast rigs independent of local render FPS. Maximum streamed weighted actors: 12; other residents use one far instanced representation or data only. Up to 100 resident citizen identities, plus hero and 4 cast. Up to 18 human geometry resources and 17 active skeletons; each near character has 6 material groups and up to 3 morph targets. Tier 1 contact capsules add colliders but no rigid bodies. The current local renderer is a compatibility measurement; no modern-GPU throughput, 60 FPS acceptance or RT execution is claimed. See HUMAN_SPEC and HUMAN evidence for measured costs and artifacts.
+Modern high-end hardware remains the target. HUMAN keeps the full generated hero (32,268 triangles after OP05, 51 bones) and four cast rigs independent of local render FPS. Maximum streamed weighted actors: 12; other residents use one far instanced representation or data only. Up to 100 resident citizen identities, plus hero and 4 cast. Up to 18 human geometry resources and 17 active skeletons; each near character has 6 material groups and 8 morph targets after OP06. Tier 1 contact capsules add colliders but no rigid bodies. The current local renderer is a compatibility measurement; no modern-GPU throughput, 60 FPS acceptance or RT execution is claimed. See HUMAN_SPEC and HUMAN evidence for measured costs and artifacts.
 
 ## PROMETHEUS costs and bounds
 
@@ -66,3 +66,11 @@ One active hero articulation adds 13 bodies/colliders and 12 joints; partial mod
 The partial sole correction is analytic IK after physical pose mapping. Its cost is CPU work; full falls retain physical mapping. The runtime reports actual post-correction foot error separately from base animation error. Reaction CPU is the latest fixed-update controller cost, not a per-rendered-frame aggregate or the complete Rapier solver cost. Physics timing and whole-frame timing remain necessary.
 
 Graphics increment 05 reduces hero triangles from 35,304 to 32,268 and vertices from 20,825 to 19,413 while retaining 51 bones and six material groups. Two additional shared 128-square RGBA normal/roughness maps add 128 KiB base texels (about 171 KiB with mipmaps). Crowd cap and full hero quality remain independent of local FPS. Detailed local timings and final-build conditions are in [evidence](evidence/euphoria-validation.md); no modern-GPU result has been extrapolated.
+
+## SECONDARY LIFE configured workload — Operation 06
+
+The production target explicitly includes **16 GB VRAM** on the requested modern 60+ CU-class RT-capable GPU. That is target capacity, not permission to allocate unbounded resources and not a measured device result.
+
+At most nine secondary owners: hero, visible cast and eligible Tier 1 actors. Detailed cloth has 143 particles / 240 triangles; near cloth has 42 particles / 60 triangles. Detailed short hair has 108 guide particles / 180 triangles; long hair 198 / 360. Near hair halves the guide count. These meshes add two material draws per selected actor per applicable render pass, with potential shadow/transmission repetition. The shared 64×256 RGBA hair map costs 64 KiB base texels (about 85 KiB with mipmaps). Dynamic CPU position/normal arrays and five new face-morph arrays add memory beyond this texture count. Total GPU VRAM is not exposed by the runtime.
+
+Each update uses steps no larger than 1/120 second and seven distance/contact sweeps; no change is made to the complete hero resolution because the compatibility PC is slow. Secondary CPU is measured around facial updates, lifecycle management, solver and vertex/normal upload preparation. It does not include GPU rasterization. Rendering can still be dominated by earlier PHOTON passes. Record actual particle counts, update cost, overall mean/p95, drawing-buffer size, submitted geometry, active characters and resource restoration in evidence.

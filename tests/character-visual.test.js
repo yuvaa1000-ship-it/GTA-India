@@ -71,7 +71,7 @@ test("Garment revisions retain valid weighted characters across body sizes and l
       assert.ok(report.triangles < lastTriangles);
       lastTriangles = report.triangles;
       assert.equal(c.rig.bones.length, 51);
-      assert.equal(c.geometry.morphAttributes.position.length, 3);
+      assert.equal(c.geometry.morphAttributes.position.length, 8);
       assert.equal(c.materials.length, 6);
       assert.ok(
         c.geometry.groups.every(

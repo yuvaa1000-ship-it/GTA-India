@@ -361,3 +361,5 @@ output {
 [hidden] {
   display: none !important;
 }
+
+#secondary-controls { display:flex; flex-wrap:wrap; gap:8px; padding:12px; align-items:center; border-bottom:1px solid #587777; }

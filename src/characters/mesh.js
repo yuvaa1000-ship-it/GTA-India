@@ -1,6 +1,16 @@
 import * as T from "three";
 import { profileGeometry } from "./profile.js";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+export const HUMAN_MORPHS = [
+  "blink",
+  "smile",
+  "elbowCorrective",
+  "browRaise",
+  "browFrown",
+  "lipWide",
+  "lipRound",
+  "cheekRaise",
+];
 // Parametric source geometry with real four-slot bone weights and relative morph deltas.
 export function buildHumanGeometry(d, rig, tier = 0) {
   const parts = Array.from({ length: 6 }, () => []),
@@ -34,7 +44,8 @@ export function buildHumanGeometry(d, rig, tier = 0) {
       weights = [],
       blink = [],
       smile = [],
-      flex = [];
+      flex = [],
+      extra = Array.from({ length: 5 }, () => []);
     for (let i = 0; i < p.count; i++) {
       const v = new T.Vector3().fromBufferAttribute(p, i);
       let a = rig.index[bone],
@@ -62,13 +73,32 @@ export function buildHumanGeometry(d, rig, tier = 0) {
         0,
         feature === "arm" ? (v.z - center[2]) * 0.14 : 0,
       );
+      const cheek =
+        feature === "face"
+          ? Math.max(0, 1 - Math.abs(v.y - d.height * 0.927) / 0.035) *
+            Math.max(0, 1 - Math.abs(Math.abs(v.x) - 0.045) / 0.04) *
+            Math.max(0, v.z / 0.088)
+          : 0;
+      extra[0].push(0, feature === "brow" ? 0.013 : 0, 0);
+      extra[1].push(
+        feature === "brow" ? -Math.sign(v.x) * 0.007 : 0,
+        feature === "brow" ? -0.008 : 0,
+        0,
+      );
+      extra[2].push(feature === "mouth" ? v.x * 0.3 : 0, 0, 0);
+      extra[3].push(
+        feature === "mouth" ? -v.x * 0.35 : 0,
+        feature === "mouth" ? (v.y - center[1]) * 1.4 : 0,
+        feature === "mouth" ? 0.009 : 0,
+      );
+      extra[4].push(0, cheek * 0.009, cheek * 0.004);
     }
     g.setAttribute("skinIndex", new T.Uint16BufferAttribute(indices, 4));
     g.setAttribute("skinWeight", new T.Float32BufferAttribute(weights, 4));
     g.morphTargetsRelative = true;
-    g.morphAttributes.position = [blink, smile, flex].map((a, i) => {
+    g.morphAttributes.position = [blink, smile, flex, ...extra].map((a, i) => {
       const b = new T.Float32BufferAttribute(a, 3);
-      b.name = ["blink", "smile", "elbowCorrective"][i];
+      b.name = HUMAN_MORPHS[i];
       return b;
     });
     parts[mat].push(g);
@@ -215,7 +245,14 @@ export function buildHumanGeometry(d, rig, tier = 0) {
     "neck",
     "chest",
   ]);
-  add(0, [0, h * 0.925, 0], [d.faceWidth, h * 0.075, 0.088], "head");
+  add(
+    0,
+    [0, h * 0.925, 0],
+    [d.faceWidth, h * 0.075, 0.088],
+    "head",
+    null,
+    "face",
+  );
   add(
     0,
     [0, h * 0.9, 0.035],
@@ -255,7 +292,14 @@ export function buildHumanGeometry(d, rig, tier = 0) {
         null,
         "lid",
       );
-      add(3, [s * 0.04, h * 0.965, 0.081], [0.031, 0.005, 0.014], "head");
+      add(
+        3,
+        [s * 0.04, h * 0.965, 0.081],
+        [0.031, 0.005, 0.014],
+        "head",
+        null,
+        "brow",
+      );
     }
     const sx = s * (d.shoulders + 0.02);
     if (tier < 2) {
@@ -443,12 +487,12 @@ export function buildHumanGeometry(d, rig, tier = 0) {
   if (d.hair !== "bald")
     add(
       3,
-      [0, h * 0.928, -0.008],
-      [d.faceWidth * 1.06, h * 0.08, 0.09],
+      [0, h * 0.925, 0],
+      [d.faceWidth * 1.015, h * 0.0765, 0.0893],
       "head",
       null,
       null,
-      Math.PI * 0.4,
+      Math.PI * 0.47,
     );
   if (d.hair === "bun")
     add(3, [0, h * 0.966, -0.089], [0.047, 0.04, 0.045], "head");
@@ -490,7 +534,7 @@ export function buildHumanGeometry(d, rig, tier = 0) {
   for (const g of used) g.dispose();
   geometry.morphTargetsRelative = true;
   geometry.morphAttributes.position.forEach(
-    (a, i) => (a.name = ["blink", "smile", "elbowCorrective"][i]),
+    (a, i) => (a.name = HUMAN_MORPHS[i]),
   );
   geometry.computeBoundingBox();
   geometry.computeBoundingSphere();

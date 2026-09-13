@@ -26,6 +26,9 @@ export function updateHUD(m) {
           m.reactions?.physicalFootError == null
             ? "—"
             : fmt(m.reactions.physicalFootError * 100) + " cm",
+        "Secondary CPU / actors":
+          fmt(m.secondary?.cpuMs ?? 0) + " ms / " + (m.secondary?.actors ?? 0),
+        "Hair / cloth particles": m.secondary?.particles ?? 0,
         "Reaction CPU": fmt(m.reactions?.cpuMs ?? 0) + " ms",
         "COM support / joints":
           fmt(m.reactions?.balance?.signedSupportDistance ?? null) +
@@ -55,7 +58,7 @@ export function updateHUD(m) {
       .map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`)
       .join(
         "",
-      )}</dl><div class="coordinates">${m.position.x.toFixed(1)} E · ${m.position.z.toFixed(1)} N <span>EUPHORIA INDIA 0.5</span></div>`;
+      )}</dl><div class="coordinates">${m.position.x.toFixed(1)} E · ${m.position.z.toFixed(1)} N <span>SECONDARY LIFE 0.6</span></div>`;
 }
 export const notice = (text) => {
   document.querySelector("#notice").textContent = text;

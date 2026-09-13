@@ -12,6 +12,7 @@ import { Depot } from "../world/depot.js";
 import { MotionDirector } from "../animation/director.js";
 import { PhysicalReactions } from "../physical-animation/system.js";
 import { HumanSystem } from "../characters/system.js";
+import { SecondarySystem } from "../secondary/system.js";
 import { Photon } from "../rendering/photon.js";
 export class Runtime {
   async init() {
@@ -34,6 +35,7 @@ export class Runtime {
     this.humans = new HumanSystem(this);
     this.motion = new MotionDirector(this);
     this.reactions = new PhysicalReactions(this);
+    this.secondary = new SecondarySystem(this);
     this.time = 0;
     this.previous = null;
     this.running = true;
@@ -169,18 +171,25 @@ export class Runtime {
     }
 
     if (this.inspectHuman) {
+      const close = this.secondaryView === "face";
+      const distance = close ? 1.05 : 3.1;
       this.camera.position.set(
-        pos.x + Math.sin(this.input.yaw + 0.3) * 3.1,
-        pos.y + 0.55,
-        pos.z + Math.cos(this.input.yaw + 0.3) * 3.1,
+        pos.x + Math.sin(this.input.yaw + 0.3) * distance,
+        pos.y + (close ? 0.73 : 0.55),
+        pos.z + Math.cos(this.input.yaw + 0.3) * distance,
       );
-      this.camera.lookAt(pos.x, pos.y + 0.15, pos.z);
+      this.camera.lookAt(pos.x, pos.y + (close ? 0.73 : 0.15), pos.z);
     }
+    this.secondary.restore();
     this.humans.update(
       this.time,
       Math.max(1 / 120, this.clock.elapsed - simulatedBefore),
     );
     this.reactions.pose();
+    this.secondary.update(
+      this.time,
+      Math.max(0, this.clock.elapsed - simulatedBefore),
+    );
     this.photon.render(this.time, dt, rawDt);
     this.metrics.record(
       rawDt,
@@ -241,6 +250,7 @@ export class Runtime {
       "webglcontextlost",
       this.contextLost,
     );
+    this.secondary.dispose();
     this.reactions.dispose();
     this.motion.dispose();
     this.humans.dispose();

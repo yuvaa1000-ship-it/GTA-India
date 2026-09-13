@@ -1,4 +1,16 @@
-# GTA INDIA — EUPHORIA INDIA
+# GTA INDIA — SECONDARY LIFE 0.6
+
+Original Indian open-world technical prototype. Production intent: modern **60+ CU-class, RT-capable GPUs with 16 GB VRAM** and GTA VI/RDR2-level visual ambition. Current procedural graphics remain far below that target; no hardware RT backend or target-GPU acceptance is claimed.
+
+Operation 06 adds live hair-guide strips, garment-panel simulation, facial shape controls, gaze and timed viseme performance to the existing physical-character foundation. Run `npm ci`, `npm test`, `npm run build`, then `npm run preview -- --port 4173`. Open http://localhost:4173/.
+
+Use **Inspect character**, then **View: Front / Back / Face**. The secondary controls select long/short hair, ten material/panel presets, wind and expression. **Conversation poses** drives timed mouth shapes; it has no recorded speech audio. **Sound cue** plays an original brief tone and redirects attention. The Light control's Rain setting drives gradual wetness. Walk/run and Apply impact exercise actual attachment motion and fall/recovery. **Validate secondary life** runs the dedicated live checks; all previous laboratories remain available.
+
+Garments are attached simulation panels rather than complete sewn assets; hair uses sparse strips, collision volumes are approximations, and facial shapes are FACS-inspired artistic controls. These limits and measured results are in [SYSTEM_STATUS](docs/SYSTEM_STATUS.md), [SECONDARY_LIFE_SPEC](docs/SECONDARY_LIFE_SPEC.md) and [evidence](docs/evidence/secondary-life-validation.md).
+
+Continuity starts with [AGENTS.md](AGENTS.md), [OPERATION_LEDGER](docs/OPERATION_LEDGER.md) and [NEXT_TASK](docs/NEXT_TASK.md). Completed operation prompts supplied again are reference. A stopped preview server does not delete the committed game. Operations 01–05 and their evidence remain in Git history and the repository.
+
+## Earlier foundations
 
 An original open-world engineering prototype in the fictional Indian port city of Navapur. OPERATION 05 — EUPHORIA INDIA adds articulated hero reactions, disturbance assessment, partial physical animation, full physical falls and a bounded return to locomotion. It extends the committed PROMETHEUS contact-motion framework and preserves the GENESIS playable district, PHOTON rendering laboratory, weighted HUMAN hero/cast, deterministic citizens and crowd detail tiers. The operation name identifies original project code; this build does not contain NaturalMotion’s proprietary Euphoria engine.
 
@@ -51,7 +63,7 @@ Use **Enter motion lab** to enter an elevated contact course within the existing
 
 The visible hero follows achieved capsule movement. Ground rays feed alternating stance/swing targets, retained foot placement, terrain-normal alignment and bounded pelvis compensation. Procedural acceleration, turning, lean and arm layers supplement the inherited face/finger layer. Telemetry measures contact error and actual ankle motion so a state label alone cannot establish correct movement.
 
-**IMPLEMENTED BUT LIMITED:** movement/context control, explicit rig mapping and retargeting, the physical laboratory, and dynamic box contact targets. **EXPERIMENTAL:** gait, foot locking, terrain adaptation, standing reach, body offsets and seat poses. Seat trials do not establish correct complete sitting; scooter/rickshaw rigs do not provide riding or vehicle entry. Reaching a box does not create a grasp or carrying constraint. **PLANNED:** production animation assets, motion matching, root-motion warping, anatomical constraints, complete seated/vehicle transitions, production anatomical constraints and physical secondary motion. Operation 05 adds the bounded physical reactions described below; it does not complete those production systems.
+**IMPLEMENTED BUT LIMITED:** movement/context control, explicit rig mapping and retargeting, the physical laboratory, and dynamic box contact targets. **EXPERIMENTAL:** gait, foot locking, terrain adaptation, standing reach, body offsets and seat poses. Seat trials do not establish correct complete sitting; scooter/rickshaw rigs do not provide riding or vehicle entry. Reaching a box does not create a grasp or carrying constraint. **PLANNED:** production animation assets, motion matching, root-motion warping, anatomical constraints, complete seated/vehicle transitions. Operation 06 adds bounded secondary motion described above. Operation 05 adds the bounded physical reactions described below; it does not complete those production systems.
 
 Focused regressions inspect actual bone endpoints, invariant limb lengths, unreachable targets, retargeting axes, movement cadence, terrain traversal and repeated resource release. Run **Validate motion**, **Validate humans**, **Run diagnostics**, and **Compare rendering** when changing this integration. Current executable outcomes are recorded in [system status](docs/SYSTEM_STATUS.md); this README does not substitute for a completed browser run. Read the [PROMETHEUS specification](docs/PROMETHEUS_SPEC.md) and [animation contract](docs/ANIMATION_SPEC.md) for the full technique boundaries.
 

@@ -54,3 +54,12 @@ USER DIRECTION: Operation 03 is reference; execute Operation 04 only. Maintain m
 - CONFIRMED IMPLEMENTATION: the graphics increment adds continuous near/hero garment and limb profiles plus original woven normal/roughness detail within the existing weighted character/material ownership. It preserves distant representation limits. Procedural anatomy remains stylized; cloth shading is not cloth dynamics or final production art.
 - VERIFICATION BOUNDARY: an initial executable pass reported 14 reaction, 8 HUMAN, 11 GENESIS and 8 PHOTON checks passing. Those results precede ongoing final integration checks and do not constitute final acceptance of the latest working tree. `SYSTEM_STATUS.md` and its revision-specific evidence own final test outcomes and measured performance.
 - TARGET LIMITATION: the current renderer remains WebGL2 without hardware ray tracing. High-end target hardware was unavailable for acceptance; no current frame-rate or image-quality guarantee follows from a preset name, CU count or local result.
+
+## Operation 06 — SECONDARY LIFE
+
+- CONTINUITY: Local/GitHub OP05 d7d0569 verified; resupplied03–05 prompts treated as reference. The latest exact06 prompt is archived. The user clarified 16 GB VRAM alongside the preserved high-end60+ CU/RT target.
+- DESIGN CHOICE: Reuse current rigs, original procedural maps and authored guide/panel data; no paid asset generation or remote compute is necessary for this bounded integration.
+- EXPERIMENTAL IMPLEMENTATION: Compliant distance constraints approximate flexible material; second-neighbour bending, rest tethers, one-way capsule projection and panel presets are not full fibre/shell simulations.
+- DESIGN CHOICE: Facial additive output follows final physical pose and restores before the next animated pose. Explicit authored speech cues drive real shape/bone channels; they are not generated dialogue audio or inferred phonemes.
+- GRAPHICS: Add actual animated strips/panels and five facial shape channels, reduce rigid scalp volume, expose front/back/face views. Character inspection moves off a non-colliding curb; city-wide curb collision remains prior work.
+- PERFORMANCE: Preserve hero detail; optimize rejected collision queries before reducing workload. Target-class performance must be measured on real hardware and is not inferred from local FPS.

@@ -2,6 +2,7 @@ import "./style.css";
 import { Runtime } from "./core/runtime.js";
 import { diagnostics } from "./debug/diagnostics.js";
 import { runReactionScenario } from "./physical-animation/scenarios.js";
+import { validateSecondary } from "./debug/secondary-validation.js";
 import { validateReactions } from "./debug/reaction-validation.js";
 import { validateMotion } from "./debug/motion-validation.js";
 import { validateHumans } from "./debug/human-validation.js";
@@ -56,6 +57,7 @@ try {
     if (runtime.inspectHuman) {
       runtime.reset();
       runtime.humans.heroYaw = 0;
+      runtime.player.teleport({ x: 0, y: 2, z: 6 }); // Inspect off the non-colliding decorative curb.
     }
     e.target.textContent = runtime.inspectHuman
       ? "Follow character"
@@ -158,6 +160,35 @@ try {
       urgency: value === "urgency" ? 1 : 0,
     };
   };
+  document.querySelector("#secondary-view").onchange = (e) => {
+    runtime.inspectHuman = true;
+    runtime.inspectLab = false;
+    runtime.secondaryView = e.target.value;
+    runtime.input.yaw = e.target.value === "back" ? Math.PI : 0;
+    document.querySelector("#panel").hidden = true;
+  };
+  const configureSecondary = () =>
+    runtime.secondary.configure({
+      fabric: document.querySelector("#secondary-fabric").value,
+      hair: document.querySelector("#secondary-hair").value,
+    });
+  document.querySelector("#secondary-fabric").onchange = configureSecondary;
+  document.querySelector("#secondary-hair").onchange = configureSecondary;
+  document.querySelector("#secondary-wind").onchange = (e) =>
+    (runtime.secondary.wind = Number(e.target.value));
+  document.querySelector("#secondary-emotion").onchange = (e) =>
+    (runtime.secondary.emotion = e.target.value);
+  document.querySelector("#secondary-talk").onclick = (e) => {
+    runtime.secondary.conversation = !runtime.secondary.conversation;
+    e.target.textContent = runtime.secondary.conversation
+      ? "Stop conversation poses"
+      : "Conversation poses";
+    notice("Timed viseme performance · no recorded dialogue audio");
+  };
+  document.querySelector("#secondary-sound").onclick = () =>
+    runtime.secondary.soundCue();
+  document.querySelector("#secondary-test").onclick = () =>
+    runValidation(validateSecondary);
   document.querySelector("#reaction-impact").onclick = () => {
     runReactionScenario(
       runtime,
@@ -212,7 +243,7 @@ try {
     );
     const a = document.createElement("a");
     a.href = url;
-    a.download = "euphoria-runtime-report.json";
+    a.download = "secondary-life-runtime-report.json";
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };

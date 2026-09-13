@@ -41,7 +41,7 @@ test("Human assets have valid weights, source scale, topology and decreasing LOD
     assert.equal(report.bones, 51);
     assert.ok(report.triangles < prior);
     prior = report.triangles;
-    assert.equal(report.morphs.length, 3);
+    assert.equal(report.morphs.length, 8);
     c.dispose();
   }
   surfaces.dispose();

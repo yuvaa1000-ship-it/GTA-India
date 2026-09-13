@@ -28,13 +28,13 @@ Skin state accepts bounded wet/dirt/dust/bruise controls and changes actual mate
 
 ## Crowd tiers
 
-| Tier | Implemented representation | Remaining work |
-| --- | --- | --- |
-| 0 | Always-detailed playable rig plus four cast samples, full generated geometry, gaze/face controls. Player retains Rapier movement. | Final hero/story art, full interaction, physical animation and dialogue. |
-| 1 | Nearby skinned citizens, denser generated mesh, pose each eligible frame; standalone capsule contact blocks/deflects the player. | Local decision-making, avoidance, dynamic reactions, negotiated contacts and animation transitions. |
-| 2 | Reduced tessellation, same skeleton, pose updates at up to 12 Hz. | Reduced bone palette, cheaper materials and robust pose interpolation. |
-| 3 | One instanced resting human template with per-citizen height/girth/tint. | Animated impostors and silhouette variety beyond affine shape. |
-| 4 | Resident citizen data only, analytical path reconstructs state at current time. | Persistent off-region schedules, events and city simulation. |
+| Tier | Implemented representation                                                                                                        | Remaining work                                                                                      |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| 0    | Always-detailed playable rig plus four cast samples, full generated geometry, gaze/face controls. Player retains Rapier movement. | Final hero/story art, full interaction, physical animation and dialogue.                            |
+| 1    | Nearby skinned citizens, denser generated mesh, pose each eligible frame; standalone capsule contact blocks/deflects the player.  | Local decision-making, avoidance, dynamic reactions, negotiated contacts and animation transitions. |
+| 2    | Reduced tessellation, same skeleton, pose updates at up to 12 Hz.                                                                 | Reduced bone palette, cheaper materials and robust pose interpolation.                              |
+| 3    | One instanced resting human template with per-citizen height/girth/tint.                                                          | Animated impostors and silhouette variety beyond affine shape.                                      |
+| 4    | Resident citizen data only, analytical path reconstructs state at current time.                                                   | Persistent off-region schedules, events and city simulation.                                        |
 
 Initial thresholds: 32 m /65 m /180 m, frustum-based offscreen tier and hysteresis. At most 12 streamed skinned citizens are active in addition to hero/cast. At most one new weighted geometry is built per rendered frame; pending citizens retain the far representation. Tier changes replace geometry with explicit disposal. Caps are data in the owner, not adaptation to the local FPS. Full hero geometry is retained across PHOTON quality settings.
 
@@ -56,7 +56,10 @@ Sources: installed Three.js 0.180 source and official [SkinnedMesh documentation
 
 The rendering validation's short target-cleanup phase temporarily freezes HUMAN updates to hold character allocations constant, then restores the prior flag in finally. All four measured rendering conditions run with live characters; the separate HUMAN and streaming regressions verify animation and representation changes.
 
-
 ## Operation 05 visual revision
 
 Near/hero meshes now use continuous tapered profile surfaces for torso and limbs, plus garment collars/plackets/pockets/cuffs and hems. Three shared textures are owned by HumanSurfaces: the retained pore texture plus128² cloth normal and roughness maps. Hero tier0 is19,413 vertices/32,268 triangles; near tier1 is13,396 triangles;far tier2 remains2,648. The51-bone,three-morph,six-material contract is preserved. See GRAPHICS_PROGRESS.md for before/after inspection and exact remaining art limitations. Previous mesh/texture counts elsewhere in this document describe the Operation03 starting milestone.
+
+## Operation 06 facial and secondary extension
+
+The original three morph channels retain indices 0–2. Five real relative shape buffers add browRaise, browFrown, lipWide, lipRound and cheekRaise; the mesh now has eight morph channels and still 51 bones. Source vertex/triangle counts are unchanged by these shapes. A smaller static scalp supports separately simulated strips. Per-character secondary resource owners are capped and independently disposed; see SECONDARY_LIFE_SPEC. Garment panels supplement existing clothing, and visual anatomy remains procedural.

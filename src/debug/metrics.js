@@ -84,6 +84,7 @@ export class Metrics {
       humans: runtime.humans?.stats() ?? null,
       motion: runtime.motion?.stats() ?? null,
       reactions: runtime.reactions?.stats() ?? null,
+      secondary: runtime.secondary?.stats() ?? null,
       pool: runtime.streaming.pool.length,
       created: runtime.streaming.created,
       evicted: runtime.streaming.evicted,

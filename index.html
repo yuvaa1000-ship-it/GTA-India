@@ -3,28 +3,79 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>GTA INDIA · Euphoria India</title>
+    <title>GTA INDIA · Secondary Life</title>
   </head>
   <body>
     <canvas id="game" aria-label="Playable 3D district"></canvas>
     <header>
-      <span class="eyebrow">PHYSICAL REACTIONS / 005</span>
+      <span class="eyebrow">SECONDARY LIFE / 006</span>
       <h1>GTA <em>INDIA</em></h1>
       <p>NAVAPUR · OLD PORT DISTRICT</p>
     </header>
     <aside id="hud" aria-label="Developer performance HUD"></aside>
     <section id="panel">
-      <span class="eyebrow">EUPHORIA INDIA / PHYSICAL REACTIONS</span>
-      <h2>Impact needs<br />consequence.</h2>
+      <span class="eyebrow">SECONDARY LIFE / HAIR · CLOTH · EXPRESSION</span>
+      <h2>Movement leaves<br />an echo.</h2>
       <p>
-        Test controlled bumps, recovery steps and articulated falls, coupled to
-        the existing movement laboratory.
-      </p>
+        Inspect live hair, fabric and facial response in wind, rain, movement and conversation.
+        </p>
       <button id="play">Enter the district <span>↗</span></button>
       <p class="small">Original procedural characters · Live skinning</p>
     </section>
     <details id="tools" open>
       <summary>Laboratories and rendering controls</summary>
+      <section id="secondary-controls" aria-label="Secondary life laboratory">
+        <label
+          >Fabric panel
+          <select id="secondary-fabric">
+            <option value="jacket">Jacket</option>
+            <option value="shirt">Fitted shirt</option>
+            <option value="kurta">Kurta</option>
+            <option value="dupatta">Dupatta</option>
+            <option value="saree">Saree drape</option>
+            <option value="veshti">Veshti / lungi</option>
+            <option value="dhoti">Dhoti</option>
+            <option value="shawl">Shawl</option>
+            <option value="raincoat">Raincoat</option>
+            <option value="uniform">Police uniform</option>
+          </select></label
+        >
+        <label
+          >Hair
+          <select id="secondary-hair">
+            <option value="short">Short</option>
+            <option value="long">Long</option>
+          </select></label
+        >
+        <label
+          >Wind
+          <select id="secondary-wind">
+            <option value="0">Still</option>
+            <option value="1.5" selected>Breeze</option>
+            <option value="7">Gusts</option>
+          </select></label
+        >
+        <label
+          >Expression
+          <select id="secondary-emotion">
+            <option value="neutral">Neutral</option>
+            <option value="happy">Happy</option>
+            <option value="concerned">Concerned</option>
+            <option value="surprised">Surprised</option>
+          </select></label
+        >
+        <label
+          >View
+          <select id="secondary-view">
+            <option value="front">Front</option>
+            <option value="back">Back</option>
+            <option value="face">Face</option>
+          </select></label
+        >
+        <button id="secondary-talk">Conversation poses</button
+        ><button id="secondary-sound">Sound cue</button
+        ><button id="secondary-test">Validate secondary life</button>
+      </section>
       <section id="reaction-controls" aria-label="Physical reaction laboratory">
         <label
           >Impact
